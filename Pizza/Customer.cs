@@ -10,30 +10,30 @@ using System.Windows.Forms;
 
 namespace Pizza
 {
-    public partial class Mitesser : UserControl
+    public partial class Customer : UserControl
     {
-        MitesserProperties MitesserProperties;
-    
-        public Mitesser()
+        private BestellerProps bestellerProperties;
+
+        public Customer()
         {
-            MitesserProperties = new MitesserProperties();
+            bestellerProperties = new BestellerProps();
             InitializeComponent();
         }
 
-        public Mitesser(MitesserProperties tmp)
+        public Customer(BestellerProps tmp)
         {
-            MitesserProperties = tmp;    
+            bestellerProperties = tmp;
             InitializeComponent();
 
             // Initialisierung der control properties .....
             // init Funktion
-            this.label1.Text = MitesserProperties.MitesserName;
+            this.label1.Text = bestellerProperties.MitesserName;
         }
     }
 
-    public class MitesserProperties
+    public class BestellerProps
     {
-        private string mitesserName;
+        private string bestellerName;
         private string bestellung;
         private bool bestellt;
         private float preis;
@@ -41,19 +41,20 @@ namespace Pizza
         private float bezahlt;
         private float trinkgeld;
         private float restgeld;
+        private float guthaben;
 
-        public MitesserProperties() {}
+        public BestellerProps() { }
 
-        public MitesserProperties(string name)
+        public BestellerProps(string name)
         {
-            mitesserName = name;
+            bestellerName = name;
         }
 
         public bool Bestellt
         {
             get
             {
-               return bestellt;
+                return bestellt;
             }
             set
             {
@@ -65,11 +66,11 @@ namespace Pizza
         {
             get
             {
-                return mitesserName;
+                return bestellerName;
             }
             set
             {
-                mitesserName = value;
+                bestellerName = value;
             }
         }
 
@@ -179,5 +180,24 @@ namespace Pizza
                 }
             }
         }
+
+        public float Guthaben
+        {
+            get
+            {
+                return guthaben;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    guthaben = 0;
+                }
+                else
+                {
+                    guthaben = value;
+                }
+            }
+        }
     }
-}
+}   

@@ -1,6 +1,6 @@
 ﻿namespace Pizza
 {
-    partial class Mitesser
+    partial class Customer
     {
         /// <summary> 
         /// Erforderliche Designervariable.

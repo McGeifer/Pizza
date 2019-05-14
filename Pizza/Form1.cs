@@ -15,33 +15,35 @@ namespace Pizza
 {
     public partial class Form1 : Form
     {
-        private List<Mitesser> Lst = new List<Mitesser>();
-        private List<MitesserProperties> MeLst = new List<MitesserProperties>();
+        private List<Customer>             BestellerLst = new List<Customer>();
+        private List<BestellerProps>   BestellerPropLst = new List<BestellerProps>();
+        private List<Order>            BestellungLst = new List<Order>();
+
         static XmlSerializer serializer;
-        static FileStream stream;
+        static FileStream fileStream;
         
         public Form1()
         {
             InitializeComponent();
-            InitUsers();
-            InitOrders();
+            InitBesteller();
+            //InitOrders();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MeLst.Add(new MitesserProperties("Anton Abendroth"));
-            MeLst.Add(new MitesserProperties("Berta Bertram"));
-            MeLst.Add(new MitesserProperties("Christel"));
-            MeLst.Add(new MitesserProperties("Kanzler"));
+            BestellerPropLst.Add(new BestellerProps("Anton Abendroth"));
+            BestellerPropLst.Add(new BestellerProps("Berta Bertram"));
+            BestellerPropLst.Add(new BestellerProps("Christel"));
+            BestellerPropLst.Add(new BestellerProps("Kanzler"));
 
-            foreach (MitesserProperties x in MeLst)
+            foreach (BestellerProps x in BestellerPropLst)
             {
-                Lst.Add(new Mitesser(x));
+                BestellerLst.Add(new Customer(x));
             }
 
             int i = -20;
 
-            foreach (Mitesser tmp in Lst)
+            foreach (Customer tmp in BestellerLst)
             {
                 tmp.Location = new Point(5, i += 40);
                 groupBox2.Controls.Add(tmp);
@@ -52,17 +54,17 @@ namespace Pizza
 
         void SaveXml()
         {
-            serializer = new XmlSerializer(typeof(MitesserProperties));
-            stream = new FileStream(@".\tmp.xml", FileMode.Create);
-            foreach (MitesserProperties tmp in MeLst)
+            serializer = new XmlSerializer(typeof(BestellerProps));
+            fileStream = new FileStream(@".\tmp.xml", FileMode.Create);
+            foreach (BestellerProps tmp in BestellerPropLst)
             {
-                serializer.Serialize(stream, tmp);
+                serializer.Serialize(fileStream, tmp);
             }
-            stream.Close();
+            fileStream.Close();
         }
 
-        // Load user data from XML file and store it in UserLst.
-        void InitUsers()
+        // Lade Besteller-Daten und speichere diese in der BestellerLst.
+        void InitBesteller()
         {
             try
             {
@@ -70,10 +72,32 @@ namespace Pizza
             }
             catch (FileNotFoundException)
             {
-                FileStream fileStream = new FileStream(@".users.xml", FileMode.CreateNew, FileDialog );
-                throw;
+                DialogResult dialogResult = MessageBox.Show("Die Benutzerdaten konnten nicht gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
+                
+                if(dialogResult == DialogResult.Yes)
+                {
+                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                    {
+                        openFileDialog.InitialDirectory = @".\";
+                        openFileDialog.Filter = "|bestellerName.xml";
+                        openFileDialog.FilterIndex = 1;
+                        openFileDialog.RestoreDirectory = true;
+
+                        if (openFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            // Get the path of specified file
+                            var filePath = openFileDialog.FileName;
+
+                            // Read the contents of the file into a fileStream
+                            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                            serializer = new XmlSerializer(typeof(BestellerProps));
+                            //(BestellerProps)serializer.Deserialize(fileStream);
+
+
+                        }
+                    }
+                }
             }    
-        
         }
     }
 }
