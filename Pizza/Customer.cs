@@ -10,192 +10,213 @@ using System.Windows.Forms;
 
 namespace Pizza
 {
-    public partial class Customer : UserControl
+    public partial class CustomerControl : UserControl
     {
-        private BestellerProps bestellerProperties;
+        //private CustomerProps CustomerProps;
 
-        public Customer()
+        public CustomerControl()
         {
-            bestellerProperties = new BestellerProps();
             InitializeComponent();
         }
 
-        public Customer(BestellerProps tmp)
+        public CustomerControl(CustomerProps tmp)
         {
-            bestellerProperties = tmp;
+            //CustomerProps = tmp;
             InitializeComponent();
-
-            // Initialisierung der control properties .....
-            // init Funktion
-            this.label1.Text = bestellerProperties.MitesserName;
+            this.label1.Text = tmp.CustomerName;
         }
     }
 
-    public class BestellerProps
+    public class CustomerProps
     {
-        private string bestellerName;
-        private string bestellung;
-        private bool bestellt;
-        private float preis;
-        private float rabatt;
-        private float bezahlt;
-        private float trinkgeld;
-        private float restgeld;
-        private float guthaben;
+        private string customerName;
+        private string articles;
+        private bool ordered;
+        private float price;
+        private float discount;
+        private float payed;
+        private float tip;
+        private float change;
+        private float credit;
 
-        public BestellerProps() { }
-
-        public BestellerProps(string name)
+        public CustomerProps()
         {
-            bestellerName = name;
+            
         }
 
-        public bool Bestellt
+        public CustomerProps(string CustomerName, string Articles)
+        {
+            this.customerName = CustomerName;
+            this.articles = Articles;
+        }
+        
+        public string CustomerName
         {
             get
             {
-                return bestellt;
+                if(customerName == string.Empty)
+                {
+                    return "Unbekannt";
+                }
+                else
+                {
+                    return customerName;
+                }
+            }
+            set 
+            {
+                if(value == string.Empty)
+                {
+                    customerName = "Unbekannt";
+                }
+                else
+                {
+                    customerName = value;
+                }
+            }
+        }
+
+        public string Articles
+        {
+            get
+            {
+                if (articles == string.Empty)
+                {
+                    return "-";
+                }
+                else
+                {
+                    return articles;
+                }
             }
             set
             {
-                bestellt = value;
+                articles = value;
             }
         }
 
-        public string MitesserName
+        public bool Ordered
         {
             get
             {
-                return bestellerName;
+                return ordered;
             }
             set
             {
-                bestellerName = value;
+                ordered = value;
             }
         }
 
-        public string Bestellung
+        public float Price
         {
             get
             {
-                return bestellung;
-            }
-            set
-            {
-                bestellung = value;
-            }
-        }
-
-        public float Preis
-        {
-            get
-            {
-                return preis;
+                return price;
             }
             set
             {
                 if (value < 0)
                 {
-                    preis = 0;
+                    price = 0;
                 }
                 else
                 {
-                    preis = value;
+                    price = value;
                 }
             }
         }
 
-        public float Rabatt
+        public float Discount
         {
             get
             {
-                return rabatt;
+                return discount;
             }
             set
             {
                 if (value < 0)
                 {
-                    rabatt = 0;
+                    discount = 0;
                 }
                 else
                 {
-                    rabatt = value;
+                    discount = value;
                 }
             }
         }
 
-        public float Bezahlt
+        public float Payed
         {
             get
             {
-                return bezahlt;
+                return payed;
             }
             set
             {
                 if (value < 0)
                 {
-                    bezahlt = 0;
+                    payed = 0;
                 }
                 else
                 {
-                    bezahlt = value;
+                    payed = value;
                 }
             }
         }
 
-        public float Trinkgeld
+        public float Tip
         {
             get
             {
-                return trinkgeld;
+                return tip;
             }
             set
             {
                 if (value < 0)
                 {
-                    trinkgeld = 0;
+                    tip = 0;
                 }
                 else
                 {
-                    trinkgeld = value;
+                    tip = value;
                 }
             }
         }
 
-        public float Restgeld
+        public float Change
         {
             get
             {
-                return restgeld;
+                return change;
             }
             set
             {
                 if (value < 0)
                 {
-                    restgeld = 0;
+                    change = 0;
                 }
                 else
                 {
-                    restgeld = value;
+                    change = value;
                 }
             }
         }
 
-        public float Guthaben
+        public float Credit
         {
             get
             {
-                return guthaben;
+                return credit;
             }
             set
             {
                 if (value < 0)
                 {
-                    guthaben = 0;
+                    credit = 0;
                 }
                 else
                 {
-                    guthaben = value;
+                    credit = value;
                 }
             }
         }

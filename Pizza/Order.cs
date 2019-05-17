@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Pizza
 {
-    class Order
+    [Serializable]
+    public class Order
     {
-        private Customer customer;
+        private List<CustomerProps> customerPropsLst;
 
-        private string      orderTitel;
+        private string      orderTitle;
         private DateTime    orderTimestamp;
         private bool        orderClosed;
         private float       orderSum;
@@ -19,19 +20,22 @@ namespace Pizza
 
         public Order()
         {
-            customer = new Customer();       
+            customerPropsLst = new List<CustomerProps>();
+            OrderTimestamp = DateTime.Now;
         }
 
-        public Order(Customer tmp)
+        public Order(List<CustomerProps> tmp)
         {
-            customer = tmp;
+            customerPropsLst = tmp;
+            OrderTimestamp = DateTime.Now;
         }
 
-        public string OrderTitel { get => orderTitel; set => orderTitel = value; }
+        public string OrderTitle { get => orderTitle; set => orderTitle = value; }
         public DateTime OrderTimestamp { get => orderTimestamp; set => orderTimestamp = value; }
         public bool OrderClosed { get => orderClosed; set => orderClosed = value; }
         public float OrderSum { get => orderSum; set => orderSum = value; }
         public float OrderSumWithDiscount { get => orderSumWithDiscount; set => orderSumWithDiscount = value; }
         public float OrderSumPayed { get => orderSumPayed; set => orderSumPayed = value; }
+        public List<CustomerProps> CustomerPropsLst { get => customerPropsLst; set => customerPropsLst = value; }
     }
 }
