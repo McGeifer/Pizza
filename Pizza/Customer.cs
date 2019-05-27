@@ -12,8 +12,7 @@ namespace Pizza
 {
     public partial class CustomerControl : UserControl
     {
-        //private CustomerProps CustomerProps;
-
+#region constructors
         public CustomerControl()
         {
             InitializeComponent();
@@ -21,9 +20,188 @@ namespace Pizza
 
         public CustomerControl(CustomerProps tmp)
         {
-            //CustomerProps = tmp;
             InitializeComponent();
-            this.label1.Text = tmp.CustomerName;
+            this.labelCustomerName.Text = tmp.CustomerName;
+        }
+#endregion
+
+#region methods
+        // keypress is a decimal or comma character
+        private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
+            {
+                return true;
+            } 
+            else
+            {
+                return false;
+            }
+        }
+
+        // only allow one decimal point for text box
+        private bool AllowOnlyOneComma(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void TextBoxAddCurrencySign(TextBox t, EventArgs e)
+        {
+            if (!t.Text.Contains("€") && (!String.IsNullOrEmpty(t.Text) || !String.IsNullOrWhiteSpace(t.Text)))
+            {
+                t.Text = t.Text + " € ";
+            }
+        }
+
+        private bool TextBoxInputConfirmed(KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(Keys.Enter) || e.KeyChar == Convert.ToChar(Keys.Return))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void DisableCustomerControl()
+        {
+            //labelCustomerName.Enabled = false;
+            //labelSumWithDiscount.Enabled = false;
+            //labelChange.Enabled = false;
+            textBoxOrder.Enabled = false;
+            textBoxSum.Enabled = false;
+            textBoxDiscount.Enabled = false;
+            textBoxSumPayed.Enabled = false;
+        }
+
+        private void EnableCustomerControl()
+        {
+            //labelCustomerName.Enabled = true;
+            //labelSumWithDiscount.Enabled = true;
+            //labelChange.Enabled = true;
+            textBoxOrder.Enabled = true;
+            textBoxSum.Enabled = true;
+            textBoxDiscount.Enabled = true;
+            textBoxSumPayed.Enabled = true;
+        }
+
+#endregion
+
+#region event handler
+
+        private void TextBoxSum_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (TextBoxInputConfirmed(e))
+            {
+                e.Handled = true;
+                textBoxDiscount.Focus();
+            }
+
+            if(KeyPressedIsDecimalOrComma(sender, e))    
+            {
+                e.Handled = true;
+            }
+            
+            if (AllowOnlyOneComma(sender, e))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TextBoxSum_Leave(object sender, EventArgs e)
+        {
+            TextBoxAddCurrencySign(textBoxSum, e);
+        }
+
+        private void TextBoxSum_MouseClick(object sender, MouseEventArgs e)
+        {
+            textBoxSum.SelectAll();
+        }
+
+        private void TextBoxDiscount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (TextBoxInputConfirmed(e))
+            {
+                e.Handled = true;
+                textBoxSumPayed.Focus();
+            }
+
+            if (KeyPressedIsDecimalOrComma(sender, e))
+            {
+                e.Handled = true;
+            }
+
+            if (AllowOnlyOneComma(sender, e))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TextBoxDiscount_Leave(object sender, EventArgs e)
+        {
+            TextBoxAddCurrencySign(textBoxDiscount, e);
+        }
+
+        private void TextBoxDiscount_MouseClick(object sender, MouseEventArgs e)
+        {
+            textBoxDiscount.SelectAll();
+        }
+       
+        private void TextBoxSumPayed_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (TextBoxInputConfirmed(e))
+            {
+                e.Handled = true;
+                checkBoxOrder.Focus();
+            }
+
+            if (KeyPressedIsDecimalOrComma(sender, e))
+            {
+                e.Handled = true;
+            }
+
+            if (AllowOnlyOneComma(sender, e))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TextBoxSumPayed_Leave(object sender, EventArgs e)
+        {
+            TextBoxAddCurrencySign(textBoxSumPayed, e);
+        }
+
+        private void TextBoxSumPayed_MouseClick(object sender, MouseEventArgs e)
+        {
+            textBoxSumPayed.SelectAll();
+        }
+
+        #endregion
+
+        private void checkBoxOrder_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxOrder.Checked)
+            {
+                DisableCustomerControl();
+            }
+            else
+            {
+                DialogResult dialogResult = MessageBox.Show("Bestellt Markierung wirklich aufheben?", "Warnung", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    EnableCustomerControl();
+                }
+            }
         }
     }
 

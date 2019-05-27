@@ -16,29 +16,28 @@ namespace Pizza
 {
     public partial class Form1 : Form
     {
-        private List<Order> OrdersLst = new List<Order>();
-
-        private List<Order> OrdersLstTmp = new List<Order>();
+        private List<Order> ordersLst = new List<Order>();
+        private List<Order> ordersLstTmp = new List<Order>();
 
         // nur für Testzwecke
-        private List<CustomerProps> CustomerPropsLst = new List<CustomerProps>();
-        private List<CustomerControl> CustomerCrtlsLst = new List<CustomerControl>();
+        private List<CustomerProps> customerPropsLst = new List<CustomerProps>();
+        private List<CustomerControl> customerCrtlsLst = new List<CustomerControl>();
 
         static XmlSerializer serializer;
         static FileStream fileStream;
         
+
         public Form1()
         {
             InitializeComponent();
-            LoadOrders();
+            DeserializeOrdersXml();
             InitComboBoxOrders();
             InitOrderTable();
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // create test xml file
+            // create test XML file
         
             CustomerProps props1 = new CustomerProps();
             props1.CustomerName = "Test1";
@@ -92,8 +91,8 @@ namespace Pizza
 
         }
 
-        // load orders from xml file
-        void LoadOrders()
+        // load orders from XML file
+        void DeserializeOrdersXml()
         {
             string filePath = ".\\orders.xml";
             FileStream fileStream;
@@ -142,9 +141,9 @@ namespace Pizza
         {
             List<string> lst = new List<string>();
             
-            foreach(Order i in OrdersLst)
+            foreach(Order order in OrdersLst)
             {
-                lst.Add(i.OrderTimestamp.ToString("yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo) + " " + i.OrderTitle); // sort orders by timestamp
+                lst.Add(order.OrderTimestamp.ToString("yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo) + " " + order.OrderTitle); // sort orders by time stamp
             }
 
             cboOrders.Items.AddRange(lst.OrderBy(x => x).ToArray()); // add sorted orders to combo box
@@ -162,7 +161,7 @@ namespace Pizza
             {
                 Order order = new Order();
                 order = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Order;
-                int i = -20;
+                int i = 25;
 
                 foreach (CustomerProps customerProps in order.CustomerPropsLst)
                 {
@@ -178,5 +177,10 @@ namespace Pizza
                 } 
             }
         }
+
+        public List<Order> OrdersLstTmp { get => ordersLstTmp; set => ordersLstTmp = value; }
+        public List<Order> OrdersLst { get => ordersLst; set => ordersLst = value; }
+        public List<CustomerProps> CustomerPropsLst { get => customerPropsLst; set => customerPropsLst = value; }
+        public List<CustomerControl> CustomerCrtlsLst { get => customerCrtlsLst; set => customerCrtlsLst = value; }
     }
 }

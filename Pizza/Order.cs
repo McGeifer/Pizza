@@ -38,4 +38,6 @@ namespace Pizza
         public float OrderSumPayed { get => orderSumPayed; set => orderSumPayed = value; }
         public List<CustomerProps> CustomerPropsLst { get => customerPropsLst; set => customerPropsLst = value; }
     }
+
+    
 }
