@@ -14,20 +14,20 @@ using System.Globalization;
 
 namespace Pizza
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        private List<Order> ordersLst = new List<Order>();
-        private List<Order> ordersLstTmp = new List<Order>();
+        private List<Orders> ordersLst = new List<Orders>();
+        private List<Orders> ordersLstTmp = new List<Orders>();
 
         // nur für Testzwecke
-        private List<CustomerProps> customerPropsLst = new List<CustomerProps>();
-        private List<CustomerControl> customerCrtlsLst = new List<CustomerControl>();
+        private List<OrderProps> orderPropsLst = new List<OrderProps>();
+        private List<OrderControl> orderCrtlLst = new List<OrderControl>();
 
         static XmlSerializer serializer;
         static FileStream fileStream;
         
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             DeserializeOrdersXml();
@@ -39,22 +39,22 @@ namespace Pizza
         {
             // create test XML file
         
-            CustomerProps props1 = new CustomerProps();
+            OrderProps props1 = new OrderProps();
             props1.CustomerName = "Test1";
 
-            CustomerProps props2 = new CustomerProps();
+            OrderProps props2 = new OrderProps();
             props2.CustomerName = "Test2";
 
-            CustomerProps props3 = new CustomerProps();
+            OrderProps props3 = new OrderProps();
             props3.CustomerName = "Test3";
 
-            CustomerProps props4 = new CustomerProps();
+            OrderProps props4 = new OrderProps();
             props4.CustomerName = "Test4";
 
-            CustomerProps props5 = new CustomerProps();
+            OrderProps props5 = new OrderProps();
             props5.CustomerName = "Test5";
 
-            List<CustomerProps> propsLst = new List<CustomerProps>();
+            List<OrderProps> propsLst = new List<OrderProps>();
 
             propsLst.Add(props1);
             propsLst.Add(props2);
@@ -62,20 +62,20 @@ namespace Pizza
             propsLst.Add(props4);
             propsLst.Add(props5);
 
-            Order orderTmp1 = new Order();
+            Orders orderTmp1 = new Orders();
             orderTmp1.OrderTimestamp = DateTime.Parse("2019-04-01T18:45:32");
-            orderTmp1.CustomerPropsLst = propsLst;
+            orderTmp1.OrderPropsLst = propsLst;
             orderTmp1.OrderTitle = "Order 1";
 
-            Order orderTmp2 = new Order();
+            Orders orderTmp2 = new Orders();
             orderTmp2.OrderTimestamp = DateTime.Parse("2019-07-01T18:45:32");
-            orderTmp2.CustomerPropsLst = propsLst;
+            orderTmp2.OrderPropsLst = propsLst;
 
             orderTmp2.OrderTitle = "Order 2";
 
-            Order orderTmp3 = new Order();
+            Orders orderTmp3 = new Orders();
             orderTmp3.OrderTimestamp = DateTime.Parse("2019-11-01T18:45:32");
-            orderTmp3.CustomerPropsLst = propsLst;
+            orderTmp3.OrderPropsLst = propsLst;
 
             orderTmp3.OrderTitle = "Order 3";
 
@@ -84,7 +84,7 @@ namespace Pizza
             OrdersLstTmp.Add(orderTmp3);
 
 
-            serializer = new XmlSerializer(typeof(List<Order>));
+            serializer = new XmlSerializer(typeof(List<Orders>));
             fileStream = new FileStream(@".\orders.xml", FileMode.Create);
             serializer.Serialize(fileStream, OrdersLstTmp);
             fileStream.Close();
@@ -96,12 +96,12 @@ namespace Pizza
         {
             string filePath = ".\\orders.xml";
             FileStream fileStream;
-            XmlSerializer deserializer = new XmlSerializer(typeof(List<Order>));
+            XmlSerializer deserializer = new XmlSerializer(typeof(List<Orders>));
 
             try
             {
                 fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                OrdersLst = (List<Order>)deserializer.Deserialize(fileStream);
+                OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
                 fileStream.Close();
             }
             catch (FileNotFoundException)
@@ -124,7 +124,7 @@ namespace Pizza
 
                             // Read the contents of the file into a fileStream
                             fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                            OrdersLst = (List<Order>)deserializer.Deserialize(fileStream);
+                            OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
                             fileStream.Close();
                         }
                         else
@@ -141,7 +141,7 @@ namespace Pizza
         {
             List<string> lst = new List<string>();
             
-            foreach(Order order in OrdersLst)
+            foreach(Orders order in OrdersLst)
             {
                 lst.Add(order.OrderTimestamp.ToString("yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo) + " " + order.OrderTitle); // sort orders by time stamp
             }
@@ -159,16 +159,16 @@ namespace Pizza
         {
             if (OrdersLst.Any())
             {
-                Order order = new Order();
-                order = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Order;
+                Orders order = new Orders();
+                order = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Orders;
                 int i = 25;
 
-                foreach (CustomerProps customerProps in order.CustomerPropsLst)
+                foreach (OrderProps orderProps in order.OrderPropsLst)
                 {
-                    CustomerControl customerControl = new CustomerControl(customerProps);
-                    CustomerCrtlsLst.Add(customerControl);
-                    groupBox2.Controls.Add(customerControl);
-                    customerControl.Location = new Point(5, i += 40);
+                    OrderControl orderControl = new OrderControl(orderProps);
+                    OrderCrtlLst.Add(orderControl);
+                    groupBox2.Controls.Add(orderControl);
+                    orderControl.Location = new Point(5, i += 40);
                 }
 
                 if (order.OrderClosed)
@@ -178,9 +178,15 @@ namespace Pizza
             }
         }
 
-        public List<Order> OrdersLstTmp { get => ordersLstTmp; set => ordersLstTmp = value; }
-        public List<Order> OrdersLst { get => ordersLst; set => ordersLst = value; }
-        public List<CustomerProps> CustomerPropsLst { get => customerPropsLst; set => customerPropsLst = value; }
-        public List<CustomerControl> CustomerCrtlsLst { get => customerCrtlsLst; set => customerCrtlsLst = value; }
+        public List<Orders> OrdersLstTmp { get => ordersLstTmp; set => ordersLstTmp = value; }
+        public List<Orders> OrdersLst { get => ordersLst; set => ordersLst = value; }
+        public List<OrderProps> OrderPropsLst { get => orderPropsLst; set => orderPropsLst = value; }
+        public List<OrderControl> OrderCrtlLst { get => orderCrtlLst; set => orderCrtlLst = value; }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ConfigForm configForm = new ConfigForm();
+            configForm.Show();
+        }
     }
 }

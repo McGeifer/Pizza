@@ -1,6 +1,6 @@
 ﻿namespace Pizza
 {
-    partial class CustomerControl
+    partial class OrderControl
     {
         /// <summary> 
         /// Erforderliche Designervariable.
@@ -132,7 +132,7 @@
             this.labelChange.Text = "15,99";
             this.labelChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CustomerControl
+            // OrderControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -148,7 +148,7 @@
             this.Controls.Add(this.labelCustomerName);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "CustomerControl";
+            this.Name = "OrderControl";
             this.Size = new System.Drawing.Size(814, 41);
             this.ResumeLayout(false);
             this.PerformLayout();
