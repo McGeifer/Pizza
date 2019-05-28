@@ -183,7 +183,8 @@ namespace Pizza
         public List<OrderProps> OrderPropsLst { get => orderPropsLst; set => orderPropsLst = value; }
         public List<OrderControl> OrderCrtlLst { get => orderCrtlLst; set => orderCrtlLst = value; }
 
-        private void button4_Click(object sender, EventArgs e)
+
+        private void buttonConfig_Click(object sender, EventArgs e)
         {
             ConfigForm configForm = new ConfigForm();
             configForm.Show();

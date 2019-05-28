@@ -36,6 +36,7 @@
             this.labelSumWithDiscount = new System.Windows.Forms.Label();
             this.textBoxSumPayed = new System.Windows.Forms.TextBox();
             this.labelChange = new System.Windows.Forms.Label();
+            this.textBoxTip = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelCustomerName
@@ -59,12 +60,14 @@
             this.textBoxOrder.Size = new System.Drawing.Size(300, 26);
             this.textBoxOrder.TabIndex = 1;
             this.textBoxOrder.Text = "Bestellung";
+            this.textBoxOrder.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxOrder_MouseClick);
+            this.textBoxOrder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxOrder_KeyPress);
             // 
             // checkBoxOrder
             // 
             this.checkBoxOrder.AutoSize = true;
             this.checkBoxOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxOrder.Location = new System.Drawing.Point(795, 14);
+            this.checkBoxOrder.Location = new System.Drawing.Point(875, 14);
             this.checkBoxOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxOrder.Name = "checkBoxOrder";
             this.checkBoxOrder.Size = new System.Drawing.Size(15, 14);
@@ -124,13 +127,25 @@
             // 
             this.labelChange.AutoSize = true;
             this.labelChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelChange.Location = new System.Drawing.Point(704, 10);
+            this.labelChange.Location = new System.Drawing.Point(694, 10);
             this.labelChange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelChange.Name = "labelChange";
-            this.labelChange.Size = new System.Drawing.Size(49, 20);
+            this.labelChange.Size = new System.Drawing.Size(62, 20);
             this.labelChange.TabIndex = 0;
-            this.labelChange.Text = "15,99";
+            this.labelChange.Text = "15,99 €";
             this.labelChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxTip
+            // 
+            this.textBoxTip.Location = new System.Drawing.Point(773, 7);
+            this.textBoxTip.Name = "textBoxTip";
+            this.textBoxTip.Size = new System.Drawing.Size(65, 26);
+            this.textBoxTip.TabIndex = 6;
+            this.textBoxTip.Text = "15,99 € ";
+            this.textBoxTip.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBoxTip.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxTip_MouseClick);
+            this.textBoxTip.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxTip_KeyPress);
+            this.textBoxTip.Leave += new System.EventHandler(this.TextBoxTip_Leave);
             // 
             // OrderControl
             // 
@@ -138,6 +153,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.textBoxTip);
             this.Controls.Add(this.labelChange);
             this.Controls.Add(this.textBoxSumPayed);
             this.Controls.Add(this.labelSumWithDiscount);
@@ -149,7 +165,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "OrderControl";
-            this.Size = new System.Drawing.Size(814, 41);
+            this.Size = new System.Drawing.Size(896, 41);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,5 +181,6 @@
         private System.Windows.Forms.Label labelSumWithDiscount;
         private System.Windows.Forms.TextBox textBoxSumPayed;
         private System.Windows.Forms.Label labelChange;
+        private System.Windows.Forms.TextBox textBoxTip;
     }
 }

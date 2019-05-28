@@ -12,7 +12,8 @@ namespace Pizza
 {
     public partial class OrderControl : UserControl
     {
-#region constructors
+        #region constructors
+
         public OrderControl()
         {
             InitializeComponent();
@@ -23,9 +24,11 @@ namespace Pizza
             InitializeComponent();
             this.labelCustomerName.Text = tmp.CustomerName;
         }
-#endregion
 
-#region methods
+        #endregion
+
+        #region methods
+
         // keypress is a decimal or comma character
         private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
         {
@@ -94,9 +97,23 @@ namespace Pizza
             textBoxSumPayed.Enabled = true;
         }
 
-#endregion
+        #endregion
 
-#region event handler
+        #region event handler
+
+        private void TextBoxOrder_MouseClick(object sender, MouseEventArgs e)
+        {
+            textBoxOrder.SelectAll();
+        }
+
+        private void TextBoxOrder_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (TextBoxInputConfirmed(e))
+            {
+                textBoxSum.Focus();
+                e.Handled = true;
+            }
+        }
 
         private void TextBoxSum_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -161,7 +178,7 @@ namespace Pizza
             if (TextBoxInputConfirmed(e))
             {
                 e.Handled = true;
-                checkBoxOrder.Focus();
+                textBoxTip.Focus();
             }
 
             if (KeyPressedIsDecimalOrComma(sender, e))
@@ -185,7 +202,34 @@ namespace Pizza
             textBoxSumPayed.SelectAll();
         }
 
-        #endregion
+        private void TextBoxTip_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (TextBoxInputConfirmed(e))
+            {
+                e.Handled = true;
+                checkBoxOrder.Focus();
+            }
+
+            if (KeyPressedIsDecimalOrComma(sender, e))
+            {
+                e.Handled = true;
+            }
+
+            if (AllowOnlyOneComma(sender, e))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TextBoxTip_Leave(object sender, EventArgs e)
+        {
+            TextBoxAddCurrencySign(textBoxTip, e);
+        }
+
+        private void TextBoxTip_MouseClick(object sender, MouseEventArgs e)
+        {
+            textBoxTip.SelectAll();
+        }
 
         private void checkBoxOrder_CheckedChanged(object sender, EventArgs e)
         {
@@ -203,5 +247,7 @@ namespace Pizza
                 }
             }
         }
+
+        #endregion
     }
-}   
+}
