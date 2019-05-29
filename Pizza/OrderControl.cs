@@ -231,7 +231,7 @@ namespace Pizza
             textBoxTip.SelectAll();
         }
 
-        private void checkBoxOrder_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxOrder_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxOrder.Checked)
             {
@@ -247,7 +247,6 @@ namespace Pizza
                 }
             }
         }
-
         #endregion
     }
 }

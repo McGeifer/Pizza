@@ -30,6 +30,12 @@ namespace Pizza
         public MainForm()
         {
             InitializeComponent();
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
+        }
+
+        private void MainForm_Shown(Object sender, EventArgs e)
+        {
+            // Initializing data structures and load program data.
             DeserializeOrdersXml();
             InitComboBoxOrders();
             InitOrderTable();
@@ -38,46 +44,63 @@ namespace Pizza
         private void button1_Click(object sender, EventArgs e)
         {
             // create test XML file
-        
-            OrderProps props1 = new OrderProps();
-            props1.CustomerName = "Test1";
 
-            OrderProps props2 = new OrderProps();
-            props2.CustomerName = "Test2";
+            OrderProps props1 = new OrderProps
+            {
+                CustomerName = "Test1"
+            };
 
-            OrderProps props3 = new OrderProps();
-            props3.CustomerName = "Test3";
+            OrderProps props2 = new OrderProps
+            {
+                CustomerName = "Test2"
+            };
 
-            OrderProps props4 = new OrderProps();
-            props4.CustomerName = "Test4";
+            OrderProps props3 = new OrderProps
+            {
+                CustomerName = "Test3"
+            };
 
-            OrderProps props5 = new OrderProps();
-            props5.CustomerName = "Test5";
+            OrderProps props4 = new OrderProps
+            {
+                CustomerName = "Test4"
+            };
 
-            List<OrderProps> propsLst = new List<OrderProps>();
+            OrderProps props5 = new OrderProps
+            {
+                CustomerName = "Test5"
+            };
 
-            propsLst.Add(props1);
-            propsLst.Add(props2);
-            propsLst.Add(props3);
-            propsLst.Add(props4);
-            propsLst.Add(props5);
+            List<OrderProps> propsLst = new List<OrderProps>
+            {
+                props1,
+                props2,
+                props3,
+                props4,
+                props5
+            };
 
-            Orders orderTmp1 = new Orders();
-            orderTmp1.OrderTimestamp = DateTime.Parse("2019-04-01T18:45:32");
-            orderTmp1.OrderPropsLst = propsLst;
-            orderTmp1.OrderTitle = "Order 1";
+            Orders orderTmp1 = new Orders
+            {
+                OrderTimestamp = DateTime.Parse("2019-04-01T18:45:32"),
+                OrderPropsLst = propsLst,
+                OrderTitle = "Order 1"
+            };
 
-            Orders orderTmp2 = new Orders();
-            orderTmp2.OrderTimestamp = DateTime.Parse("2019-07-01T18:45:32");
-            orderTmp2.OrderPropsLst = propsLst;
+            Orders orderTmp2 = new Orders
+            {
+                OrderTimestamp = DateTime.Parse("2019-07-01T18:45:32"),
+                OrderPropsLst = propsLst,
 
-            orderTmp2.OrderTitle = "Order 2";
+                OrderTitle = "Order 2"
+            };
 
-            Orders orderTmp3 = new Orders();
-            orderTmp3.OrderTimestamp = DateTime.Parse("2019-11-01T18:45:32");
-            orderTmp3.OrderPropsLst = propsLst;
+            Orders orderTmp3 = new Orders
+            {
+                OrderTimestamp = DateTime.Parse("2019-11-01T18:45:32"),
+                OrderPropsLst = propsLst,
 
-            orderTmp3.OrderTitle = "Order 3";
+                OrderTitle = "Order 3"
+            };
 
             OrdersLstTmp.Add(orderTmp1);
             OrdersLstTmp.Add(orderTmp2);
@@ -95,20 +118,22 @@ namespace Pizza
         void DeserializeOrdersXml()
         {
             string filePath = ".\\orders.xml";
-            FileStream fileStream;
+            FileStream fileStream = null;
             XmlSerializer deserializer = new XmlSerializer(typeof(List<Orders>));
 
+            // Try to read the contents of the XML file into a fileStream.
+            // If the XML file could not be found, open a file dialog to select it manually.
+            // If no valid file has been selected or the operation is canceled by the user,
+            // exit the application.
             try
             {
                 fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
-                fileStream.Close();
             }
             catch (FileNotFoundException)
             {
-                DialogResult dialogResult = MessageBox.Show("Die Bestelldaten konnten nicht gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
+                DialogResult dialogSelectFile = MessageBox.Show("Die Bestelldaten konnten nicht gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
 
-                if (dialogResult == DialogResult.Yes)
+                if (dialogSelectFile == DialogResult.Yes)
                 {
                     using (OpenFileDialog openFileDialog = new OpenFileDialog())
                     {
@@ -124,14 +149,49 @@ namespace Pizza
 
                             // Read the contents of the file into a fileStream
                             fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                            OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
-                            fileStream.Close();
-                        }
-                        else
-                        {
-                            //   ???????
                         }
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unbekannter Fehler - Anwendung kann nicht ausgeführt werden!" + ex, "Fehler", MessageBoxButtons.OK);
+                Application.Exit();
+                return;
+            }
+            
+            if (fileStream == null)
+            {
+                MessageBox.Show("Keine gültigen Bestelldaten vorhanden - Anwendung kann nicht ausgeführt werden!", "Fehler", MessageBoxButtons.OK);
+                Application.Exit();
+                return;
+            }
+            
+            try
+            {
+                OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
+                fileStream.Close();
+            }
+            catch (InvalidOperationException ex)
+            {
+                string exceptionMsg = ex.Message;
+
+                if (ex.InnerException.Message != null)
+                {
+                    exceptionMsg = exceptionMsg + "InnerException: " + ex;
+                }
+
+                DialogResult dialogResultXmlDeserializeException = MessageBox.Show(exceptionMsg, "Fehler", MessageBoxButtons.OK);
+            }
+            catch (Exception)
+            {
+                // ???
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Dispose();
                 }
             }
         }
@@ -168,7 +228,7 @@ namespace Pizza
                     OrderControl orderControl = new OrderControl(orderProps);
                     OrderCrtlLst.Add(orderControl);
                     groupBox2.Controls.Add(orderControl);
-                    orderControl.Location = new Point(5, i += 40);
+                    orderControl.Location = new Point(1, i += 40);
                 }
 
                 if (order.OrderClosed)
@@ -183,8 +243,7 @@ namespace Pizza
         public List<OrderProps> OrderPropsLst { get => orderPropsLst; set => orderPropsLst = value; }
         public List<OrderControl> OrderCrtlLst { get => orderCrtlLst; set => orderCrtlLst = value; }
 
-
-        private void buttonConfig_Click(object sender, EventArgs e)
+        private void ButtonConfig_Click(object sender, EventArgs e)
         {
             ConfigForm configForm = new ConfigForm();
             configForm.Show();

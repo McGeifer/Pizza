@@ -73,7 +73,7 @@
             this.checkBoxOrder.Size = new System.Drawing.Size(15, 14);
             this.checkBoxOrder.TabIndex = 5;
             this.checkBoxOrder.UseVisualStyleBackColor = true;
-            this.checkBoxOrder.CheckedChanged += new System.EventHandler(this.checkBoxOrder_CheckedChanged);
+            this.checkBoxOrder.CheckedChanged += new System.EventHandler(this.CheckBoxOrder_CheckedChanged);
             // 
             // textBoxSum
             // 

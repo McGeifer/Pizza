@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.cboOrders = new System.Windows.Forms.ComboBox();
             this.buttonNewOrder = new System.Windows.Forms.Button();
             this.buttonDeleteOrder = new System.Windows.Forms.Button();
             this.buttonConfig = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -50,20 +50,17 @@
             this.labelTotalNumberOfOrders = new System.Windows.Forms.Label();
             this.labelTotalOrdersSum = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.labelAverageOrdersSum = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.labelTotalTips = new System.Windows.Forms.Label();
-            this.labelAverageTip = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.programBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.labelAverageTip = new System.Windows.Forms.Label();
+            this.labelTotalTips = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.labelAverageOrdersSum = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.programBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // cboOrders
@@ -101,7 +98,7 @@
             this.buttonConfig.TabIndex = 4;
             this.buttonConfig.Text = "Optionen";
             this.buttonConfig.UseVisualStyleBackColor = true;
-            this.buttonConfig.Click += new System.EventHandler(this.buttonConfig_Click);
+            this.buttonConfig.Click += new System.EventHandler(this.ButtonConfig_Click);
             // 
             // groupBox1
             // 
@@ -134,6 +131,16 @@
             this.groupBox2.Size = new System.Drawing.Size(924, 381);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(770, 36);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(73, 20);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "Trinkgeld";
             // 
             // label10
             // 
@@ -293,43 +300,32 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Statistiken für Nerds";
             // 
-            // label13
+            // label17
             // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(26, 48);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(94, 16);
-            this.label13.TabIndex = 10;
-            this.label13.Text = "Bestellwert (Ø)";
+            this.label17.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label17.Location = new System.Drawing.Point(354, 16);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(2, 50);
+            this.label17.TabIndex = 17;
+            this.label17.Text = "label17";
             // 
-            // labelAverageOrdersSum
+            // labelAverageTip
             // 
-            this.labelAverageOrdersSum.Location = new System.Drawing.Point(126, 50);
-            this.labelAverageOrdersSum.Name = "labelAverageOrdersSum";
-            this.labelAverageOrdersSum.Size = new System.Drawing.Size(58, 13);
-            this.labelAverageOrdersSum.TabIndex = 11;
-            this.labelAverageOrdersSum.Text = "8888,88 €";
-            this.labelAverageOrdersSum.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelAverageTip.Location = new System.Drawing.Point(290, 50);
+            this.labelAverageTip.Name = "labelAverageTip";
+            this.labelAverageTip.Size = new System.Drawing.Size(58, 16);
+            this.labelAverageTip.TabIndex = 16;
+            this.labelAverageTip.Text = "8888,88 €";
+            this.labelAverageTip.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label14
+            // labelTotalTips
             // 
-            this.label14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label14.Location = new System.Drawing.Point(190, 16);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(2, 50);
-            this.label14.TabIndex = 12;
-            this.label14.Text = "label14";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(219, 32);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 16);
-            this.label15.TabIndex = 13;
-            this.label15.Text = "Trinkgeld";
+            this.labelTotalTips.Location = new System.Drawing.Point(290, 34);
+            this.labelTotalTips.Name = "labelTotalTips";
+            this.labelTotalTips.Size = new System.Drawing.Size(58, 16);
+            this.labelTotalTips.TabIndex = 15;
+            this.labelTotalTips.Text = "8888,88 €";
+            this.labelTotalTips.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label16
             // 
@@ -341,46 +337,43 @@
             this.label16.TabIndex = 14;
             this.label16.Text = "Trinkgeld (Ø)";
             // 
-            // labelTotalTips
+            // label15
             // 
-            this.labelTotalTips.Location = new System.Drawing.Point(290, 34);
-            this.labelTotalTips.Name = "labelTotalTips";
-            this.labelTotalTips.Size = new System.Drawing.Size(58, 16);
-            this.labelTotalTips.TabIndex = 15;
-            this.labelTotalTips.Text = "8888,88 €";
-            this.labelTotalTips.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(219, 32);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(65, 16);
+            this.label15.TabIndex = 13;
+            this.label15.Text = "Trinkgeld";
             // 
-            // labelAverageTip
+            // label14
             // 
-            this.labelAverageTip.Location = new System.Drawing.Point(290, 50);
-            this.labelAverageTip.Name = "labelAverageTip";
-            this.labelAverageTip.Size = new System.Drawing.Size(58, 16);
-            this.labelAverageTip.TabIndex = 16;
-            this.labelAverageTip.Text = "8888,88 €";
-            this.labelAverageTip.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.label14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label14.Location = new System.Drawing.Point(190, 16);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(2, 50);
+            this.label14.TabIndex = 12;
+            this.label14.Text = "label14";
             // 
-            // label17
+            // labelAverageOrdersSum
             // 
-            this.label17.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label17.Location = new System.Drawing.Point(354, 16);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(2, 50);
-            this.label17.TabIndex = 17;
-            this.label17.Text = "label17";
+            this.labelAverageOrdersSum.Location = new System.Drawing.Point(126, 50);
+            this.labelAverageOrdersSum.Name = "labelAverageOrdersSum";
+            this.labelAverageOrdersSum.Size = new System.Drawing.Size(58, 13);
+            this.labelAverageOrdersSum.TabIndex = 11;
+            this.labelAverageOrdersSum.Text = "8888,88 €";
+            this.labelAverageOrdersSum.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label18
+            // label13
             // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(770, 36);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(73, 20);
-            this.label18.TabIndex = 12;
-            this.label18.Text = "Trinkgeld";
-            // 
-            // programBindingSource
-            // 
-            this.programBindingSource.DataSource = typeof(Pizza.Program);
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(26, 48);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(94, 16);
+            this.label13.TabIndex = 10;
+            this.label13.Text = "Bestellwert (Ø)";
             // 
             // MainForm
             // 
@@ -401,7 +394,6 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.programBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -414,7 +406,6 @@
         private System.Windows.Forms.Button buttonConfig;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.BindingSource programBindingSource;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
