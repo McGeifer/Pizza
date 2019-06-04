@@ -17,14 +17,15 @@ namespace Pizza
     public partial class MainForm : Form
     {
         private List<Orders> ordersLst = new List<Orders>();
-        private List<Orders> ordersLstTmp = new List<Orders>();
-
-        // nur für Testzwecke
-        private List<OrderProps> orderPropsLst = new List<OrderProps>();
+        private Orders lastOrder = new Orders();
         private List<OrderControl> orderCrtlLst = new List<OrderControl>();
 
-        static XmlSerializer serializer;
-        static FileStream fileStream;
+        // Nur für Testzwecke
+        // private List<Orders> ordersLstTmp = new List<Orders>();
+        // private List<OrderProps> orderPropsLst = new List<OrderProps>();
+
+        //private XmlSerializer serializer;
+        //private FileStream fileStream;
         
 
         public MainForm()
@@ -35,86 +36,107 @@ namespace Pizza
 
         private void MainForm_Shown(Object sender, EventArgs e)
         {
-            // Initializing data structures and load program data.
+            // Set MaximumSize for MainForm to always fit screen
+            this.MaximumSize = new System.Drawing.Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
+
+            // Set MaximumSize for orderPanel to always fit into MainForm with a height set to a multiple of the OrderControl height
+            // for better visuals when scrolling inside a longer list of orders.
+            OrderControl orderControl = new OrderControl();
+            int orderControlHeight = orderControl.Height;
+            orderControl.Dispose();
+
+            int tmp = 0;
+
+            while (true)
+            {
+                tmp += orderControlHeight;
+
+                if (tmp >= Screen.PrimaryScreen.WorkingArea.Height - 250)
+                {
+                    panelOrder.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, tmp - orderControlHeight);
+                    break;
+                }
+            }
+
+            // Initialize data structures and load program data.
             DeserializeOrdersXml();
             InitComboBoxOrders();
             InitOrderTable();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // create test XML file
+        //private void button1_Click(object sender, EventArgs e)
+        //{
+        //    // create test XML file
 
-            OrderProps props1 = new OrderProps
-            {
-                CustomerName = "Test1"
-            };
+        //    OrderProps props1 = new OrderProps
+        //    {
+        //        CustomerName = "Test1"
+        //    };
 
-            OrderProps props2 = new OrderProps
-            {
-                CustomerName = "Test2"
-            };
+        //    OrderProps props2 = new OrderProps
+        //    {
+        //        CustomerName = "Test2"
+        //    };
 
-            OrderProps props3 = new OrderProps
-            {
-                CustomerName = "Test3"
-            };
+        //    OrderProps props3 = new OrderProps
+        //    {
+        //        CustomerName = "Test3"
+        //    };
 
-            OrderProps props4 = new OrderProps
-            {
-                CustomerName = "Test4"
-            };
+        //    OrderProps props4 = new OrderProps
+        //    {
+        //        CustomerName = "Test4"
+        //    };
 
-            OrderProps props5 = new OrderProps
-            {
-                CustomerName = "Test5"
-            };
+        //    OrderProps props5 = new OrderProps
+        //    {
+        //        CustomerName = "Test5"
+        //    };
 
-            List<OrderProps> propsLst = new List<OrderProps>
-            {
-                props1,
-                props2,
-                props3,
-                props4,
-                props5
-            };
+        //    List<OrderProps> propsLst = new List<OrderProps>
+        //    {
+        //        props1,
+        //        props2,
+        //        props3,
+        //        props4,
+        //        props5
+        //    };
 
-            Orders orderTmp1 = new Orders
-            {
-                OrderTimestamp = DateTime.Parse("2019-04-01T18:45:32"),
-                OrderPropsLst = propsLst,
-                OrderTitle = "Order 1"
-            };
+        //    Orders orderTmp1 = new Orders
+        //    {
+        //        OrderTimestamp = DateTime.Parse("2019-04-01T18:45:32"),
+        //        OrderPropsLst = propsLst,
+        //        OrderTitle = "Order 1"
+        //    };
 
-            Orders orderTmp2 = new Orders
-            {
-                OrderTimestamp = DateTime.Parse("2019-07-01T18:45:32"),
-                OrderPropsLst = propsLst,
+        //    Orders orderTmp2 = new Orders
+        //    {
+        //        OrderTimestamp = DateTime.Parse("2019-07-01T18:45:32"),
+        //        OrderPropsLst = propsLst,
 
-                OrderTitle = "Order 2"
-            };
+        //        OrderTitle = "Order 2"
+        //    };
 
-            Orders orderTmp3 = new Orders
-            {
-                OrderTimestamp = DateTime.Parse("2019-11-01T18:45:32"),
-                OrderPropsLst = propsLst,
+        //    Orders orderTmp3 = new Orders
+        //    {
+        //        OrderTimestamp = DateTime.Parse("2019-11-01T18:45:32"),
+        //        OrderPropsLst = propsLst,
 
-                OrderTitle = "Order 3"
-            };
+        //        OrderTitle = "Order 3"
+        //    };
 
-            OrdersLstTmp.Add(orderTmp1);
-            OrdersLstTmp.Add(orderTmp2);
-            OrdersLstTmp.Add(orderTmp3);
+        //    OrdersLstTmp.Add(orderTmp1);
+        //    OrdersLstTmp.Add(orderTmp2);
+        //    OrdersLstTmp.Add(orderTmp3);
 
-
-            serializer = new XmlSerializer(typeof(List<Orders>));
-            fileStream = new FileStream(@".\orders.xml", FileMode.Create);
-            serializer.Serialize(fileStream, OrdersLstTmp);
-            fileStream.Close();
-
-        }
+        //    serializer = new XmlSerializer(typeof(List<Orders>));
+        //    fileStream = new FileStream(@".\orders.xml", FileMode.Create);
+        //    serializer.Serialize(fileStream, OrdersLstTmp);
+        //    fileStream.Close();
+        //}
 
         // load orders from XML file
+
         void DeserializeOrdersXml()
         {
             string filePath = ".\\orders.xml";
@@ -123,7 +145,7 @@ namespace Pizza
 
             // Try to read the contents of the XML file into a fileStream.
             // If the XML file could not be found, open a file dialog to select it manually.
-            // If no valid file has been selected or the operation is canceled by the user,
+            // If no valid file has been selected or the operation is canceled by the user
             // exit the application.
             try
             {
@@ -166,7 +188,9 @@ namespace Pizza
                 Application.Exit();
                 return;
             }
-            
+
+            // Deserialize the data stream of the previously loaded XML file.
+            // If the operation fails an error message will be shown
             try
             {
                 OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
@@ -194,9 +218,14 @@ namespace Pizza
                     fileStream.Dispose();
                 }
             }
+
+            if (OrdersLst.Any())
+            {
+                LastOrder = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Orders;
+            }
         }
         
-        // add orders to combo box
+        // Add all orders (loaded from the XML file) to the combo box
         void InitComboBoxOrders()
         {
             List<string> lst = new List<string>();
@@ -214,39 +243,73 @@ namespace Pizza
             }
         }
 
-        // generate table with empty order by using the customers of the last order
+        // Generate table with a new by using the customers of the last order.
         void InitOrderTable()
         {
-            if (OrdersLst.Any())
+            if (LastOrder.OrderPropsLst.Any())
             {
-                Orders order = new Orders();
-                order = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Orders;
-                int i = 25;
+                int yOffset = 25;
 
-                foreach (OrderProps orderProps in order.OrderPropsLst)
+                // Disable MainForm layout logic while adding new controls
+                this.SuspendLayout();
+                
+                foreach (OrderProps orderProps in LastOrder.OrderPropsLst)
                 {
+                    // Add new control for each customer of the last order
                     OrderControl orderControl = new OrderControl(orderProps);
                     OrderCrtlLst.Add(orderControl);
-                    groupBox2.Controls.Add(orderControl);
-                    orderControl.Location = new Point(1, i += 40);
+                    panelOrder.Controls.Add(orderControl);
+                    orderControl.Location = new Point(1, OrderCrtlLst.Count == 1 ? 0 : (OrderCrtlLst.Count - 1) * orderControl.Height);
+
+                    // If the last iteration of the foreach loop is reached, resize the groupbox and MainForm for the new controls.
+                    //if (LastOrder.OrderPropsLst.IndexOf(orderProps) == LastOrder.OrderPropsLst.Count - 1)
+                    //{
+                    //    groupBoxOrder.Height += LastOrder.OrderPropsLst.Count * orderControl.Height;
+
+                    //    //if (this.Height >= xxx + orderControl.Height /* + offset für Zeile mit "Gesamt" */)
+                    //    //{
+                            
+                    //    //}
+                    //    this.Height += LastOrder.OrderPropsLst.Count * orderControl.Height;
+                    //}
                 }
 
-                if (order.OrderClosed)
+                if (LastOrder.OrderClosed)
                 {
-                    groupBox2.Enabled = false;
-                } 
+                    //groupBoxOrder.Enabled = false;
+                }
+
+                // Enable MainForm layout logic
+                this.ResumeLayout();
+                this.CenterToScreen();
             }
         }
 
-        public List<Orders> OrdersLstTmp { get => ordersLstTmp; set => ordersLstTmp = value; }
+        //public List<Orders> OrdersLstTmp { get => ordersLstTmp; set => ordersLstTmp = value; }
+        //public List<OrderProps> OrderPropsLst { get => orderPropsLst; set => orderPropsLst = value; }
+
         public List<Orders> OrdersLst { get => ordersLst; set => ordersLst = value; }
-        public List<OrderProps> OrderPropsLst { get => orderPropsLst; set => orderPropsLst = value; }
         public List<OrderControl> OrderCrtlLst { get => orderCrtlLst; set => orderCrtlLst = value; }
+        public Orders LastOrder { get => lastOrder; set => lastOrder = value; }
 
         private void ButtonConfig_Click(object sender, EventArgs e)
         {
             ConfigForm configForm = new ConfigForm();
             configForm.Show();
+        }
+
+        private void PanelOrder_Resize(object sender, EventArgs e)
+        {
+            //if (panelOrder.Height == Screen.PrimaryScreen.WorkingArea.Height)
+            //{
+            //    panelOrder.AutoSize = false;
+            //    panelOrder.Height = Screen.PrimaryScreen.WorkingArea.Height;
+            //}
+        }
+
+        private void panelOrderSums_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

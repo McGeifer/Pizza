@@ -29,7 +29,7 @@ namespace Pizza
 
         #region methods
 
-        // keypress is a decimal or comma character
+        // The key pressed is a decimal or comma character?
         private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
@@ -42,7 +42,7 @@ namespace Pizza
             }
         }
 
-        // only allow one decimal point for text box
+        // Only allow one decimal point for the text box.
         private bool AllowOnlyOneComma(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
@@ -55,6 +55,7 @@ namespace Pizza
             }
         }
 
+        // Add a currency sign (€) to the ende of the text box if it's not already existing.
         private void TextBoxAddCurrencySign(TextBox t, EventArgs e)
         {
             if (!t.Text.Contains("€") && (!String.IsNullOrEmpty(t.Text) || !String.IsNullOrWhiteSpace(t.Text)))
@@ -231,7 +232,7 @@ namespace Pizza
             textBoxTip.SelectAll();
         }
 
-        private void CheckBoxOrder_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxOrder_Click(object sender, EventArgs e)
         {
             if (checkBoxOrder.Checked)
             {
@@ -239,11 +240,13 @@ namespace Pizza
             }
             else
             {
+                checkBoxOrder.Checked = true;
                 DialogResult dialogResult = MessageBox.Show("Bestellt Markierung wirklich aufheben?", "Warnung", MessageBoxButtons.YesNo);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     EnableCustomerControl();
+                    checkBoxOrder.Checked = false;
                 }
             }
         }
