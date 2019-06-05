@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace Pizza
 {
-    public class Orders
+    public class Order
     {
-        private List<OrderProps> orderPropsLst;
+        private List<OrderProps> _orderPropsLst;
 
-        private string orderTitle;
-        private DateTime orderTimestamp;
-        private bool orderClosed;
-        private float orderSum;
-        private float orderSumWithDiscount;
-        private float orderSumPayed;
+        private string _orderTitle;
+        private DateTime _orderTimestamp;
+        private bool _orderClosed;
+        private float _orderSum;
+        private float _orderSumWithDiscount;
+        private float _orderSumPayed;
 
-        public Orders()
+        public Order()
         {
             OrderPropsLst = new List<OrderProps>();
             OrderTimestamp = DateTime.Now;
         }
 
-        public Orders(List<OrderProps> tmp)
+        public Order(List<OrderProps> tmp)
         {
             OrderPropsLst = tmp;
             OrderTimestamp = DateTime.Now;
@@ -31,45 +31,45 @@ namespace Pizza
 
         public string OrderTitle
         {
-            get => orderTitle; set => orderTitle = value;
+            get => _orderTitle; set => _orderTitle = value;
         }
         public DateTime OrderTimestamp
         {
-            get => orderTimestamp; set => orderTimestamp = value;
+            get => _orderTimestamp; set => _orderTimestamp = value;
         }
         public bool OrderClosed
         {
-            get => orderClosed; set => orderClosed = value;
+            get => _orderClosed; set => _orderClosed = value;
         }
         public float OrderSum
         {
-            get => orderSum; set => orderSum = value;
+            get => _orderSum; set => _orderSum = value;
         }
         public float OrderSumWithDiscount
         {
-            get => orderSumWithDiscount; set => orderSumWithDiscount = value;
+            get => _orderSumWithDiscount; set => _orderSumWithDiscount = value;
         }
         public float OrderSumPayed
         {
-            get => orderSumPayed; set => orderSumPayed = value;
+            get => _orderSumPayed; set => _orderSumPayed = value;
         }
         public List<OrderProps> OrderPropsLst
         {
-            get => orderPropsLst; set => orderPropsLst = value;
+            get => _orderPropsLst; set => _orderPropsLst = value;
         }
     }
 
     public class OrderProps
     {
-        private string customerName;
-        private string articles;
-        private bool ordered;
-        private float price;
-        private float discount;
-        private float payed;
-        private float tip;
-        private float change;
-        private float credit;
+        private string _customerName;
+        private string _articles;
+        private bool _ordered;
+        private float _price;
+        private float _discount;
+        private float _payed;
+        private float _tip;
+        private float _change;
+        private float _credit;
 
         public OrderProps()
         {
@@ -78,32 +78,32 @@ namespace Pizza
 
         public OrderProps(string CustomerName, string Articles)
         {
-            this.customerName = CustomerName;
-            this.articles = Articles;
+            this._customerName = CustomerName;
+            this._articles = Articles;
         }
 
         public string CustomerName
         {
             get
             {
-                if (customerName == string.Empty)
+                if (_customerName == string.Empty)
                 {
                     return "Unbekannt";
                 }
                 else
                 {
-                    return customerName;
+                    return _customerName;
                 }
             }
             set
             {
                 if (value == string.Empty)
                 {
-                    customerName = "Unbekannt";
+                    _customerName = "Unbekannt";
                 }
                 else
                 {
-                    customerName = value;
+                    _customerName = value;
                 }
             }
         }
@@ -112,18 +112,18 @@ namespace Pizza
         {
             get
             {
-                if (articles == string.Empty)
+                if (_articles == string.Empty)
                 {
                     return "-";
                 }
                 else
                 {
-                    return articles;
+                    return _articles;
                 }
             }
             set
             {
-                articles = value;
+                _articles = value;
             }
         }
 
@@ -131,11 +131,11 @@ namespace Pizza
         {
             get
             {
-                return ordered;
+                return _ordered;
             }
             set
             {
-                ordered = value;
+                _ordered = value;
             }
         }
 
@@ -143,17 +143,17 @@ namespace Pizza
         {
             get
             {
-                return price;
+                return _price;
             }
             set
             {
                 if (value < 0)
                 {
-                    price = 0;
+                    _price = 0;
                 }
                 else
                 {
-                    price = value;
+                    _price = value;
                 }
             }
         }
@@ -162,17 +162,17 @@ namespace Pizza
         {
             get
             {
-                return discount;
+                return _discount;
             }
             set
             {
                 if (value < 0)
                 {
-                    discount = 0;
+                    _discount = 0;
                 }
                 else
                 {
-                    discount = value;
+                    _discount = value;
                 }
             }
         }
@@ -181,17 +181,17 @@ namespace Pizza
         {
             get
             {
-                return payed;
+                return _payed;
             }
             set
             {
                 if (value < 0)
                 {
-                    payed = 0;
+                    _payed = 0;
                 }
                 else
                 {
-                    payed = value;
+                    _payed = value;
                 }
             }
         }
@@ -200,17 +200,17 @@ namespace Pizza
         {
             get
             {
-                return tip;
+                return _tip;
             }
             set
             {
                 if (value < 0)
                 {
-                    tip = 0;
+                    _tip = 0;
                 }
                 else
                 {
-                    tip = value;
+                    _tip = value;
                 }
             }
         }
@@ -219,17 +219,17 @@ namespace Pizza
         {
             get
             {
-                return change;
+                return _change;
             }
             set
             {
                 if (value < 0)
                 {
-                    change = 0;
+                    _change = 0;
                 }
                 else
                 {
-                    change = value;
+                    _change = value;
                 }
             }
         }
@@ -238,17 +238,17 @@ namespace Pizza
         {
             get
             {
-                return credit;
+                return _credit;
             }
             set
             {
                 if (value < 0)
                 {
-                    credit = 0;
+                    _credit = 0;
                 }
                 else
                 {
-                    credit = value;
+                    _credit = value;
                 }
             }
         }

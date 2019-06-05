@@ -16,9 +16,10 @@ namespace Pizza
 {
     public partial class MainForm : Form
     {
-        private List<Orders> ordersLst = new List<Orders>();
-        private Orders lastOrder = new Orders();
-        private List<OrderControl> orderCrtlLst = new List<OrderControl>();
+        private List<Order> _ordersLst = new List<Order>();
+        private Order _lastOrder = new Order();
+        private List<OrderControl> _orderCrtlLst = new List<OrderControl>();
+        private const int MainFormHeightOffset = 130;
 
         // Nur für Testzwecke
         // private List<Orders> ordersLstTmp = new List<Orders>();
@@ -26,7 +27,7 @@ namespace Pizza
 
         //private XmlSerializer serializer;
         //private FileStream fileStream;
-        
+
 
         public MainForm()
         {
@@ -40,7 +41,7 @@ namespace Pizza
             this.MaximumSize = new System.Drawing.Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
 
             // Set MaximumSize for orderPanel to always fit into MainForm with a height set to a multiple of the OrderControl height
-            // for better visuals when scrolling inside a longer list of orders.
+            // (for better visuals when scrolling inside a longer list of orders).
             OrderControl orderControl = new OrderControl();
             int orderControlHeight = orderControl.Height;
             orderControl.Dispose();
@@ -58,7 +59,7 @@ namespace Pizza
                 }
             }
 
-            // Initialize data structures and load program data.
+            // Initialize data structures and populate the order table and MainForm.
             DeserializeOrdersXml();
             InitComboBoxOrders();
             InitOrderTable();
@@ -141,7 +142,7 @@ namespace Pizza
         {
             string filePath = ".\\orders.xml";
             FileStream fileStream = null;
-            XmlSerializer deserializer = new XmlSerializer(typeof(List<Orders>));
+            XmlSerializer deserializer = new XmlSerializer(typeof(List<Order>));
 
             // Try to read the contents of the XML file into a fileStream.
             // If the XML file could not be found, open a file dialog to select it manually.
@@ -193,7 +194,7 @@ namespace Pizza
             // If the operation fails an error message will be shown
             try
             {
-                OrdersLst = (List<Orders>)deserializer.Deserialize(fileStream);
+                OrdersLst = (List<Order>)deserializer.Deserialize(fileStream);
                 fileStream.Close();
             }
             catch (InvalidOperationException ex)
@@ -221,76 +222,89 @@ namespace Pizza
 
             if (OrdersLst.Any())
             {
-                LastOrder = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Orders;
+                LastOrder = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Order;
             }
         }
         
         // Add all orders (loaded from the XML file) to the combo box
         void InitComboBoxOrders()
         {
-            List<string> lst = new List<string>();
+            List<DateTime> lst = new List<DateTime>();
             
-            foreach(Orders order in OrdersLst)
+            foreach(Order order in OrdersLst)
             {
-                lst.Add(order.OrderTimestamp.ToString("yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo) + " " + order.OrderTitle); // sort orders by time stamp
+                lst.Add(order.OrderTimestamp/*.ToString("yyyy-MM-ddThh:mm:ss", DateTimeFormatInfo.InvariantInfo)*/);
             }
 
-            cboOrders.Items.AddRange(lst.OrderBy(x => x).ToArray()); // add sorted orders to combo box
-         
-            if(cboOrders.Items.Count > 0)
+            lst.OrderBy(x => x.Year).ThenBy(x => x.Month).ThenBy(x => x.Day).ThenBy(x => x.TimeOfDay); // Sort list
+            comboBoxOrders.SelectedIndexChanged -= ComboBoxOrders_SelectedIndexChanged; // temporarily disable handler function
+
+            foreach(DateTime dateTime in lst)
             {
-                cboOrders.SelectedIndex = cboOrders.Items.Count - 1; // set last order as active
+                comboBoxOrders.Items.Add(dateTime.ToString());
             }
+            
+            if(comboBoxOrders.Items.Count > 0)
+            {
+                comboBoxOrders.SelectedIndex = comboBoxOrders.Items.Count - 1; // set last order as active
+            }
+
+            comboBoxOrders.SelectedIndexChanged += ComboBoxOrders_SelectedIndexChanged;
         }
 
         // Generate table with a new by using the customers of the last order.
         void InitOrderTable()
         {
-            if (LastOrder.OrderPropsLst.Any())
-            {
-                int yOffset = 25;
+            NewOrderTable(LastOrder);
+        }
 
-                // Disable MainForm layout logic while adding new controls
+        // Create a new order table with a given order.
+        void NewOrderTable(Order order)
+        {
+            if (order.OrderPropsLst.Any())
+            {
+                // Disable MainForm layout logic while changing controls for besser visuals.
                 this.SuspendLayout();
-                
-                foreach (OrderProps orderProps in LastOrder.OrderPropsLst)
+
+                // Clean order table by removing all controls from the panel an the OrderCrtlLst.
+                while (OrderCrtlLst.Count > 0)
+                {
+                    panelOrder.Controls.Remove(OrderCrtlLst[0]);
+                    OrderCrtlLst[0].Dispose();
+                    OrderCrtlLst.Remove(OrderCrtlLst[0]);
+                }
+
+                // Add new control for each customer of the given order.
+                foreach (OrderProps orderProps in order.OrderPropsLst)
                 {
                     // Add new control for each customer of the last order
                     OrderControl orderControl = new OrderControl(orderProps);
                     OrderCrtlLst.Add(orderControl);
                     panelOrder.Controls.Add(orderControl);
                     orderControl.Location = new Point(1, OrderCrtlLst.Count == 1 ? 0 : (OrderCrtlLst.Count - 1) * orderControl.Height);
-
-                    // If the last iteration of the foreach loop is reached, resize the groupbox and MainForm for the new controls.
-                    //if (LastOrder.OrderPropsLst.IndexOf(orderProps) == LastOrder.OrderPropsLst.Count - 1)
-                    //{
-                    //    groupBoxOrder.Height += LastOrder.OrderPropsLst.Count * orderControl.Height;
-
-                    //    //if (this.Height >= xxx + orderControl.Height /* + offset für Zeile mit "Gesamt" */)
-                    //    //{
-                            
-                    //    //}
-                    //    this.Height += LastOrder.OrderPropsLst.Count * orderControl.Height;
-                    //}
                 }
 
-                if (LastOrder.OrderClosed)
+                // Disable all controls if an order has been submitted.
+                if (order.OrderClosed)
                 {
-                    //groupBoxOrder.Enabled = false;
+                    foreach (OrderControl orderControl in OrderCrtlLst)
+                    {
+                        orderControl.Enabled = false;
+                    }
                 }
 
-                // Enable MainForm layout logic
+                // re-enable MainForm layout logic.
                 this.ResumeLayout();
+
+                // Resize and position MainForm
+                this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
                 this.CenterToScreen();
             }
         }
 
-        //public List<Orders> OrdersLstTmp { get => ordersLstTmp; set => ordersLstTmp = value; }
-        //public List<OrderProps> OrderPropsLst { get => orderPropsLst; set => orderPropsLst = value; }
-
-        public List<Orders> OrdersLst { get => ordersLst; set => ordersLst = value; }
-        public List<OrderControl> OrderCrtlLst { get => orderCrtlLst; set => orderCrtlLst = value; }
-        public Orders LastOrder { get => lastOrder; set => lastOrder = value; }
+        private List<Order> OrdersLst { get => _ordersLst; set => _ordersLst = value; }
+        private List<OrderControl> OrderCrtlLst { get => _orderCrtlLst; set => _orderCrtlLst = value; }
+        private Order LastOrder { get => _lastOrder; set => _lastOrder = value; }
 
         private void ButtonConfig_Click(object sender, EventArgs e)
         {
@@ -298,18 +312,17 @@ namespace Pizza
             configForm.Show();
         }
 
-        private void PanelOrder_Resize(object sender, EventArgs e)
+        private void ComboBoxOrders_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //if (panelOrder.Height == Screen.PrimaryScreen.WorkingArea.Height)
-            //{
-            //    panelOrder.AutoSize = false;
-            //    panelOrder.Height = Screen.PrimaryScreen.WorkingArea.Height;
-            //}
-        }
+            DateTime timeStamp = DateTime.Parse(comboBoxOrders.SelectedItem.ToString());
 
-        private void panelOrderSums_Paint(object sender, PaintEventArgs e)
-        {
-
+            for (int i = 0; i < _ordersLst.Count; i++)
+            {
+                if (OrdersLst[i].OrderTimestamp == timeStamp)
+                {
+                    NewOrderTable(OrdersLst[i]);
+                }
+            }
         }
     }
 }

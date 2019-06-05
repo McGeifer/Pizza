@@ -77,6 +77,7 @@
             // 
             // textBoxSum
             // 
+            this.textBoxSum.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxSum.Location = new System.Drawing.Point(407, 7);
             this.textBoxSum.Name = "textBoxSum";
             this.textBoxSum.Size = new System.Drawing.Size(65, 26);
@@ -89,6 +90,7 @@
             // 
             // textBoxDiscount
             // 
+            this.textBoxDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxDiscount.Location = new System.Drawing.Point(478, 7);
             this.textBoxDiscount.Name = "textBoxDiscount";
             this.textBoxDiscount.Size = new System.Drawing.Size(65, 26);
@@ -113,6 +115,7 @@
             // 
             // textBoxSumPayed
             // 
+            this.textBoxSumPayed.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxSumPayed.Location = new System.Drawing.Point(619, 7);
             this.textBoxSumPayed.Name = "textBoxSumPayed";
             this.textBoxSumPayed.Size = new System.Drawing.Size(65, 26);
@@ -137,6 +140,7 @@
             // 
             // textBoxTip
             // 
+            this.textBoxTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxTip.Location = new System.Drawing.Point(773, 7);
             this.textBoxTip.Name = "textBoxTip";
             this.textBoxTip.Size = new System.Drawing.Size(65, 26);

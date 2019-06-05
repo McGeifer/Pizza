@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cboOrders = new System.Windows.Forms.ComboBox();
+            this.comboBoxOrders = new System.Windows.Forms.ComboBox();
             this.buttonNewOrder = new System.Windows.Forms.Button();
             this.buttonDeleteOrder = new System.Windows.Forms.Button();
             this.buttonConfig = new System.Windows.Forms.Button();
@@ -60,18 +60,29 @@
             this.panelOrderHead = new System.Windows.Forms.Panel();
             this.panelOrder = new System.Windows.Forms.Panel();
             this.panelOrderSums = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
             this.groupBoxOrderManagement.SuspendLayout();
             this.groupBoxStatistics.SuspendLayout();
             this.panelOrderHead.SuspendLayout();
+            this.panelOrderSums.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cboOrders
+            // comboBoxOrders
             // 
-            this.cboOrders.FormattingEnabled = true;
-            this.cboOrders.Location = new System.Drawing.Point(6, 19);
-            this.cboOrders.Name = "cboOrders";
-            this.cboOrders.Size = new System.Drawing.Size(240, 21);
-            this.cboOrders.TabIndex = 0;
+            this.comboBoxOrders.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOrders.FormattingEnabled = true;
+            this.comboBoxOrders.Location = new System.Drawing.Point(6, 19);
+            this.comboBoxOrders.Name = "comboBoxOrders";
+            this.comboBoxOrders.Size = new System.Drawing.Size(240, 21);
+            this.comboBoxOrders.TabIndex = 0;
+            this.comboBoxOrders.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOrders_SelectedIndexChanged);
             // 
             // buttonNewOrder
             // 
@@ -103,7 +114,7 @@
             // 
             // groupBoxOrderManagement
             // 
-            this.groupBoxOrderManagement.Controls.Add(this.cboOrders);
+            this.groupBoxOrderManagement.Controls.Add(this.comboBoxOrders);
             this.groupBoxOrderManagement.Controls.Add(this.buttonConfig);
             this.groupBoxOrderManagement.Controls.Add(this.buttonNewOrder);
             this.groupBoxOrderManagement.Controls.Add(this.buttonDeleteOrder);
@@ -118,7 +129,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(767, 23);
+            this.label18.Location = new System.Drawing.Point(769, 23);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(73, 20);
             this.label18.TabIndex = 12;
@@ -136,7 +147,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(846, 23);
+            this.label9.Location = new System.Drawing.Point(849, 23);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(62, 20);
             this.label9.TabIndex = 10;
@@ -156,7 +167,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(617, 23);
+            this.label7.Location = new System.Drawing.Point(620, 23);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(63, 20);
             this.label7.TabIndex = 7;
@@ -166,7 +177,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(688, 23);
+            this.label6.Location = new System.Drawing.Point(690, 23);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(73, 20);
             this.label6.TabIndex = 6;
@@ -176,7 +187,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(550, 23);
+            this.label5.Location = new System.Drawing.Point(551, 23);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(58, 20);
             this.label5.TabIndex = 5;
@@ -186,7 +197,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(554, 3);
+            this.label4.Location = new System.Drawing.Point(555, 3);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(55, 20);
             this.label4.TabIndex = 4;
@@ -206,7 +217,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(96, 23);
+            this.label2.Location = new System.Drawing.Point(99, 23);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(84, 20);
             this.label2.TabIndex = 2;
@@ -359,8 +370,6 @@
             // 
             // panelOrderHead
             // 
-            this.panelOrderHead.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelOrderHead.AutoScroll = true;
             this.panelOrderHead.Controls.Add(this.label18);
             this.panelOrderHead.Controls.Add(this.label2);
@@ -375,7 +384,7 @@
             this.panelOrderHead.Controls.Add(this.label9);
             this.panelOrderHead.Location = new System.Drawing.Point(12, 95);
             this.panelOrderHead.Name = "panelOrderHead";
-            this.panelOrderHead.Size = new System.Drawing.Size(938, 55);
+            this.panelOrderHead.Size = new System.Drawing.Size(938, 59);
             this.panelOrderHead.TabIndex = 13;
             // 
             // panelOrder
@@ -384,28 +393,118 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panelOrder.AutoScroll = true;
             this.panelOrder.AutoSize = true;
-            this.panelOrder.Location = new System.Drawing.Point(12, 156);
+            this.panelOrder.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panelOrder.BackColor = System.Drawing.SystemColors.Control;
+            this.panelOrder.Location = new System.Drawing.Point(12, 160);
+            this.panelOrder.MinimumSize = new System.Drawing.Size(938, 41);
             this.panelOrder.Name = "panelOrder";
-            this.panelOrder.Size = new System.Drawing.Size(937, 13);
+            this.panelOrder.Size = new System.Drawing.Size(938, 41);
             this.panelOrder.TabIndex = 15;
-            this.panelOrder.Resize += new System.EventHandler(this.PanelOrder_Resize);
             // 
             // panelOrderSums
             // 
             this.panelOrderSums.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelOrderSums.BackColor = System.Drawing.SystemColors.Control;
-            this.panelOrderSums.Location = new System.Drawing.Point(15, 178);
+            this.panelOrderSums.Controls.Add(this.label22);
+            this.panelOrderSums.Controls.Add(this.label21);
+            this.panelOrderSums.Controls.Add(this.label23);
+            this.panelOrderSums.Controls.Add(this.label20);
+            this.panelOrderSums.Controls.Add(this.label24);
+            this.panelOrderSums.Controls.Add(this.label25);
+            this.panelOrderSums.Controls.Add(this.label19);
+            this.panelOrderSums.Controls.Add(this.label28);
+            this.panelOrderSums.Location = new System.Drawing.Point(12, 219);
+            this.panelOrderSums.MinimumSize = new System.Drawing.Size(938, 54);
             this.panelOrderSums.Name = "panelOrderSums";
-            this.panelOrderSums.Size = new System.Drawing.Size(940, 30);
+            this.panelOrderSums.Size = new System.Drawing.Size(938, 54);
             this.panelOrderSums.TabIndex = 14;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(323, 27);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(66, 20);
+            this.label21.TabIndex = 13;
+            this.label21.Text = "Gesamt";
+            // 
+            // label20
+            // 
+            this.label20.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label20.Location = new System.Drawing.Point(3, 11);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(910, 2);
+            this.label20.TabIndex = 14;
+            // 
+            // label19
+            // 
+            this.label19.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label19.Location = new System.Drawing.Point(3, 7);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(910, 2);
+            this.label19.TabIndex = 13;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(771, 27);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(67, 20);
+            this.label22.TabIndex = 19;
+            this.label22.Text = "999,99€";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(615, 27);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(71, 20);
+            this.label23.TabIndex = 16;
+            this.label23.Text = "999,99 €";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(400, 27);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(71, 20);
+            this.label24.TabIndex = 13;
+            this.label24.Text = "999,99 €";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label25.Location = new System.Drawing.Point(543, 27);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(71, 20);
+            this.label25.TabIndex = 14;
+            this.label25.Text = "999,99 €";
+            this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(846, 27);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(0, 20);
+            this.label28.TabIndex = 18;
+            this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(964, 220);
+            this.ClientSize = new System.Drawing.Size(962, 285);
             this.Controls.Add(this.panelOrderSums);
             this.Controls.Add(this.panelOrder);
             this.Controls.Add(this.panelOrderHead);
@@ -413,7 +512,7 @@
             this.Controls.Add(this.groupBoxOrderManagement);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.MinimumSize = new System.Drawing.Size(978, 324);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Die ewige Pizzaliste";
@@ -422,6 +521,8 @@
             this.groupBoxStatistics.PerformLayout();
             this.panelOrderHead.ResumeLayout(false);
             this.panelOrderHead.PerformLayout();
+            this.panelOrderSums.ResumeLayout(false);
+            this.panelOrderSums.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -429,7 +530,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cboOrders;
+        private System.Windows.Forms.ComboBox comboBoxOrders;
         private System.Windows.Forms.Button buttonNewOrder;
         private System.Windows.Forms.Button buttonDeleteOrder;
         private System.Windows.Forms.Button buttonConfig;
@@ -461,6 +562,14 @@
         private System.Windows.Forms.Panel panelOrderHead;
         private System.Windows.Forms.Panel panelOrder;
         private System.Windows.Forms.Panel panelOrderSums;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label28;
     }
 }
 
