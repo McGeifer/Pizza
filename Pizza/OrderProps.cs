@@ -9,13 +9,9 @@ namespace Pizza
     public class Order
     {
         private List<OrderProps> _orderPropsLst;
-
         private string _orderTitle;
         private DateTime _orderTimestamp;
         private bool _orderClosed;
-        private float _orderSum;
-        private float _orderSumWithDiscount;
-        private float _orderSumPayed;
 
         public Order()
         {
@@ -29,33 +25,28 @@ namespace Pizza
             OrderTimestamp = DateTime.Now;
         }
 
-        public string OrderTitle
-        {
-            get => _orderTitle; set => _orderTitle = value;
-        }
-        public DateTime OrderTimestamp
-        {
-            get => _orderTimestamp; set => _orderTimestamp = value;
-        }
-        public bool OrderClosed
-        {
-            get => _orderClosed; set => _orderClosed = value;
-        }
-        public float OrderSum
-        {
-            get => _orderSum; set => _orderSum = value;
-        }
-        public float OrderSumWithDiscount
-        {
-            get => _orderSumWithDiscount; set => _orderSumWithDiscount = value;
-        }
-        public float OrderSumPayed
-        {
-            get => _orderSumPayed; set => _orderSumPayed = value;
-        }
         public List<OrderProps> OrderPropsLst
         {
-            get => _orderPropsLst; set => _orderPropsLst = value;
+            get => _orderPropsLst;
+            set => _orderPropsLst = value;
+        }
+
+        public string OrderTitle
+        {
+            get => _orderTitle;
+            set => _orderTitle = value;
+        }
+
+        public DateTime OrderTimestamp
+        {
+            get => _orderTimestamp;
+            set => _orderTimestamp = value;
+        }
+
+        public bool OrderClosed
+        {
+            get => _orderClosed;
+            set => _orderClosed = value;
         }
     }
 
@@ -63,48 +54,61 @@ namespace Pizza
     {
         private string _customerName;
         private string _articles;
+        private decimal _price;
+        private decimal _discount;
+        private decimal _credit;
+        private decimal _priceWithDiscount;
+        private decimal _pricePayed;
+        private decimal _change;
+        private decimal _tip;
         private bool _ordered;
-        private float _price;
-        private float _discount;
-        private float _payed;
-        private float _tip;
-        private float _change;
-        private float _credit;
+
+        public event EventHandler ControlValueChanged;
+
+        protected virtual void OnControlValueChanged(EventArgs e, string propertyName)
+        {
+            EventHandler controlValueChanged = ControlValueChanged;
+            if (controlValueChanged != null)
+            {
+                controlValueChanged(propertyName, e);
+            }
+        }
 
         public OrderProps()
         {
 
         }
 
-        public OrderProps(string CustomerName, string Articles)
+        public OrderProps(string customerName, string articles)
         {
-            this._customerName = CustomerName;
-            this._articles = Articles;
+            this.CustomerName = customerName;
+            this.Articles = articles;
         }
 
         public string CustomerName
         {
             get
             {
-                if (_customerName == string.Empty)
+                if (_customerName != string.Empty)
                 {
-                    return "Unbekannt";
+                    return _customerName;
                 }
                 else
                 {
-                    return _customerName;
+                    return "Unbekannt";
                 }
             }
             set
             {
-                if (value == string.Empty)
-                {
-                    _customerName = "Unbekannt";
-                }
-                else
+                if (value != string.Empty)
                 {
                     _customerName = value;
                 }
+                else
+                {
+                    _customerName = "Unbekannt";
+                }
+                OnControlValueChanged(EventArgs.Empty, "CustomerName");
             }
         }
 
@@ -112,34 +116,23 @@ namespace Pizza
         {
             get
             {
-                if (_articles == string.Empty)
+                if (_articles != string.Empty)
                 {
-                    return "-";
+                    return _articles;
                 }
                 else
                 {
-                    return _articles;
+                    return string.Empty;
                 }
             }
             set
             {
                 _articles = value;
+                OnControlValueChanged(EventArgs.Empty, "Articles");
             }
         }
 
-        public bool Ordered
-        {
-            get
-            {
-                return _ordered;
-            }
-            set
-            {
-                _ordered = value;
-            }
-        }
-
-        public float Price
+        public decimal Price
         {
             get
             {
@@ -155,10 +148,11 @@ namespace Pizza
                 {
                     _price = value;
                 }
+                OnControlValueChanged(EventArgs.Empty, "Price");
             }
         }
 
-        public float Discount
+        public decimal Discount
         {
             get
             {
@@ -174,29 +168,31 @@ namespace Pizza
                 {
                     _discount = value;
                 }
+                OnControlValueChanged(EventArgs.Empty, "Discount");
             }
         }
 
-        public float Payed
+        public decimal PricePayed
         {
             get
             {
-                return _payed;
+                return _pricePayed;
             }
             set
             {
                 if (value < 0)
                 {
-                    _payed = 0;
+                    _pricePayed = 0;
                 }
                 else
                 {
-                    _payed = value;
+                    _pricePayed = value;
                 }
+                OnControlValueChanged(EventArgs.Empty, "PricePayed");
             }
         }
 
-        public float Tip
+        public decimal Tip
         {
             get
             {
@@ -212,10 +208,11 @@ namespace Pizza
                 {
                     _tip = value;
                 }
+                OnControlValueChanged(EventArgs.Empty, "Tip");
             }
         }
 
-        public float Change
+        public decimal Change
         {
             get
             {
@@ -231,10 +228,11 @@ namespace Pizza
                 {
                     _change = value;
                 }
+                OnControlValueChanged(EventArgs.Empty, "Change");
             }
         }
 
-        public float Credit
+        public decimal Credit
         {
             get
             {
@@ -250,6 +248,26 @@ namespace Pizza
                 {
                     _credit = value;
                 }
+                OnControlValueChanged(EventArgs.Empty, "Credit");
+            }
+        }
+
+        public bool Ordered
+        {
+            get => _ordered;
+            set
+            {
+                _ordered = value;
+                OnControlValueChanged(EventArgs.Empty, "Ordered");
+            }
+        }
+        public decimal PriceWithDiscount
+        {
+            get => _priceWithDiscount;
+            set
+            {
+                _priceWithDiscount = value;
+                OnControlValueChanged(EventArgs.Empty, "PriceWithDiscount");
             }
         }
     }

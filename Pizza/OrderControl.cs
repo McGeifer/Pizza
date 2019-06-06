@@ -7,11 +7,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Pizza
 {
     public partial class OrderControl : UserControl
     {
+        #region properties
+
+        private OrderProps _orderProps;
+
+        private OrderProps OrderProps
+        {
+            get => _orderProps;
+            set => _orderProps = value;
+        }
+
+        #endregion
+
         #region constructors
 
         public OrderControl()
@@ -19,10 +32,13 @@ namespace Pizza
             InitializeComponent();
         }
 
-        public OrderControl(OrderProps tmp)
+        public OrderControl(OrderProps orderProps)
         {
             InitializeComponent();
-            this.labelCustomerName.Text = tmp.CustomerName;
+            OrderProps = orderProps;
+            orderProps.ControlValueChanged += OrderProps_ControlValueChanged;
+            
+            this.labelCustomerName.Text = orderProps.CustomerName;
         }
 
         #endregion
@@ -56,7 +72,7 @@ namespace Pizza
         }
 
         // Add a currency sign (€) to the ende of the text box if it's not already existing.
-        private void TextBoxAddCurrencySign(TextBox t, EventArgs e)
+        private void TextBoxAddCurrencySign(TextBox t)
         {
             if (!t.Text.Contains("€") && (!String.IsNullOrEmpty(t.Text) || !String.IsNullOrWhiteSpace(t.Text)))
             {
@@ -78,24 +94,36 @@ namespace Pizza
 
         private void DisableCustomerControl()
         {
-            //labelCustomerName.Enabled = false;
-            //labelSumWithDiscount.Enabled = false;
-            //labelChange.Enabled = false;
             textBoxOrder.Enabled = false;
-            textBoxSum.Enabled = false;
+            textBoxPrice.Enabled = false;
             textBoxDiscount.Enabled = false;
-            textBoxSumPayed.Enabled = false;
+            textBoxPricePayed.Enabled = false;
         }
 
         private void EnableCustomerControl()
         {
-            //labelCustomerName.Enabled = true;
-            //labelSumWithDiscount.Enabled = true;
-            //labelChange.Enabled = true;
             textBoxOrder.Enabled = true;
-            textBoxSum.Enabled = true;
+            textBoxPrice.Enabled = true;
             textBoxDiscount.Enabled = true;
-            textBoxSumPayed.Enabled = true;
+            textBoxPricePayed.Enabled = true;
+        }
+
+        public void CalcSums()
+        {
+            // calc price with discount
+
+            OrderProps.PriceWithDiscount = OrderProps.Price - (OrderProps.Discount - OrderProps.Credit);
+            if (OrderProps.Discount > OrderProps.Price)
+            {
+                this.labelPriceWithDiscount.Text = "  ???";
+            }
+            else
+            {
+                decimal x = OrderProps.Price - OrderProps.Discount;
+                this.labelPriceWithDiscount.Text = x.ToString();
+            }
+
+            // calc change
         }
 
         #endregion
@@ -111,12 +139,12 @@ namespace Pizza
         {
             if (TextBoxInputConfirmed(e))
             {
-                textBoxSum.Focus();
+                textBoxPrice.Focus();
                 e.Handled = true;
             }
         }
 
-        private void TextBoxSum_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBoxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
             {
@@ -135,14 +163,31 @@ namespace Pizza
             }
         }
 
-        private void TextBoxSum_Leave(object sender, EventArgs e)
+        private void TextBoxPrice_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxSum, e);
+            if (textBoxPrice.Text == String.Empty)
+            {
+                textBoxPrice.Text = "0,00 €";
+            }
+            else
+            {
+                try
+                {
+                    OrderProps.Price = Convert.ToDecimal(textBoxPrice.Text);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Eingabe ist keine Dezimalzahl! Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+                }
+            }
+
+            TextBoxAddCurrencySign(textBoxPrice);
+            CalcSums();
         }
 
         private void TextBoxSum_MouseClick(object sender, MouseEventArgs e)
         {
-            textBoxSum.SelectAll();
+            textBoxPrice.SelectAll();
         }
 
         private void TextBoxDiscount_KeyPress(object sender, KeyPressEventArgs e)
@@ -150,7 +195,7 @@ namespace Pizza
             if (TextBoxInputConfirmed(e))
             {
                 e.Handled = true;
-                textBoxSumPayed.Focus();
+                textBoxPricePayed.Focus();
             }
 
             if (KeyPressedIsDecimalOrComma(sender, e))
@@ -166,7 +211,7 @@ namespace Pizza
 
         private void TextBoxDiscount_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxDiscount, e);
+            TextBoxAddCurrencySign(textBoxDiscount);
         }
 
         private void TextBoxDiscount_MouseClick(object sender, MouseEventArgs e)
@@ -174,7 +219,7 @@ namespace Pizza
             textBoxDiscount.SelectAll();
         }
        
-        private void TextBoxSumPayed_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextBoxPricePayed_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
             {
@@ -193,14 +238,14 @@ namespace Pizza
             }
         }
 
-        private void TextBoxSumPayed_Leave(object sender, EventArgs e)
+        private void TextBoxPricePayed_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxSumPayed, e);
+            TextBoxAddCurrencySign(textBoxPricePayed);
         }
 
-        private void TextBoxSumPayed_MouseClick(object sender, MouseEventArgs e)
+        private void TextBoxPricePayed_MouseClick(object sender, MouseEventArgs e)
         {
-            textBoxSumPayed.SelectAll();
+            textBoxPricePayed.SelectAll();
         }
 
         private void TextBoxTip_KeyPress(object sender, KeyPressEventArgs e)
@@ -224,7 +269,7 @@ namespace Pizza
 
         private void TextBoxTip_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxTip, e);
+            TextBoxAddCurrencySign(textBoxTip);
         }
 
         private void TextBoxTip_MouseClick(object sender, MouseEventArgs e)
@@ -234,6 +279,8 @@ namespace Pizza
 
         private void CheckBoxOrder_Click(object sender, EventArgs e)
         {
+            OrderProps.Articles = "Das ist ein Test";
+            
             if (checkBoxOrder.Checked)
             {
                 DisableCustomerControl();
@@ -250,6 +297,55 @@ namespace Pizza
                 }
             }
         }
+
+        // Update the text boxes and labels of the control with there corresponding Properties if they've been changed.
+        // This will guarantee consistent data between the shown value in the UI elements and the stored Property.
+        private void OrderProps_ControlValueChanged(Object objSender, EventArgs e)
+        {
+            switch (objSender as string)
+            {
+                case "Articles":
+                    textBoxOrder.Text = OrderProps.Articles;
+                    DialogResult dialogResult = MessageBox.Show("EventHandleeeeer", "%$(&§$%/§(?=)(", MessageBoxButtons.OK);
+                    break;
+
+                case "CustomerName":
+                    labelCustomerName.Text = OrderProps.CustomerName;
+                    break;
+
+                case "Price":
+                    textBoxPrice.Text = OrderProps.Price.ToString();
+                    TextBoxAddCurrencySign(textBoxPrice);
+                    break;
+
+                case "Discount":
+                    textBoxDiscount.Text = OrderProps.Discount.ToString();
+                    TextBoxAddCurrencySign(textBoxDiscount);
+                    break;
+
+                case "Credit":
+                    break;
+
+                case "PriceWithDiscount":
+                    break;
+
+                case "PricePayed":
+                    break;
+
+                case "Change":
+                    break;
+
+                case "Tip":
+                    break;
+
+                case "Ordered":
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         #endregion
     }
 }

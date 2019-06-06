@@ -19,7 +19,7 @@ namespace Pizza
         private List<Order> _ordersLst = new List<Order>();
         private Order _lastOrder = new Order();
         private List<OrderControl> _orderCrtlLst = new List<OrderControl>();
-        private const int MainFormHeightOffset = 130;
+        private const int MainFormHeightOffset = 110;
 
         // Nur für Testzwecke
         // private List<Orders> ordersLstTmp = new List<Orders>();
