@@ -68,11 +68,14 @@ namespace Pizza
         protected virtual void OnControlValueChanged(EventArgs e, string propertyName)
         {
             EventHandler controlValueChanged = ControlValueChanged;
+
             if (controlValueChanged != null)
             {
                 controlValueChanged(propertyName, e);
             }
         }
+
+
 
         public OrderProps()
         {
@@ -108,6 +111,7 @@ namespace Pizza
                 {
                     _customerName = "Unbekannt";
                 }
+
                 OnControlValueChanged(EventArgs.Empty, "CustomerName");
             }
         }
@@ -148,6 +152,7 @@ namespace Pizza
                 {
                     _price = value;
                 }
+
                 OnControlValueChanged(EventArgs.Empty, "Price");
             }
         }
@@ -168,6 +173,7 @@ namespace Pizza
                 {
                     _discount = value;
                 }
+
                 OnControlValueChanged(EventArgs.Empty, "Discount");
             }
         }
@@ -188,6 +194,7 @@ namespace Pizza
                 {
                     _pricePayed = value;
                 }
+
                 OnControlValueChanged(EventArgs.Empty, "PricePayed");
             }
         }
@@ -208,6 +215,7 @@ namespace Pizza
                 {
                     _tip = value;
                 }
+
                 OnControlValueChanged(EventArgs.Empty, "Tip");
             }
         }
@@ -228,6 +236,7 @@ namespace Pizza
                 {
                     _change = value;
                 }
+
                 OnControlValueChanged(EventArgs.Empty, "Change");
             }
         }
@@ -248,7 +257,8 @@ namespace Pizza
                 {
                     _credit = value;
                 }
-                OnControlValueChanged(EventArgs.Empty, "Credit");
+
+                //OnControlValueChanged(EventArgs.Empty, "Credit");
             }
         }
 
@@ -261,6 +271,7 @@ namespace Pizza
                 OnControlValueChanged(EventArgs.Empty, "Ordered");
             }
         }
+
         public decimal PriceWithDiscount
         {
             get => _priceWithDiscount;

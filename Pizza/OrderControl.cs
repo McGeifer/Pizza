@@ -16,6 +16,7 @@ namespace Pizza
         #region properties
 
         private OrderProps _orderProps;
+        public event EventHandler OrderControlChanged;
 
         private OrderProps OrderProps
         {
@@ -36,7 +37,7 @@ namespace Pizza
         {
             InitializeComponent();
             OrderProps = orderProps;
-            orderProps.ControlValueChanged += OrderProps_ControlValueChanged;
+            OrderProps.ControlValueChanged += OrderProps_ControlValueChanged;
             
             this.labelCustomerName.Text = orderProps.CustomerName;
         }
@@ -45,7 +46,7 @@ namespace Pizza
 
         #region methods
 
-        // The key pressed is a decimal or comma character?
+        // Is the key pressed a decimal or comma character?
         private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
@@ -58,7 +59,7 @@ namespace Pizza
             }
         }
 
-        // Only allow one decimal point for the text box.
+        // Allow only one decimal point for the text box.
         private bool AllowOnlyOneComma(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
@@ -71,12 +72,19 @@ namespace Pizza
             }
         }
 
-        // Add a currency sign (€) to the ende of the text box if it's not already existing.
+        // Add a currency sign (€) to the end of the text box/ label if it doesn't already exists.
         private void TextBoxAddCurrencySign(TextBox t)
         {
             if (!t.Text.Contains("€") && (!String.IsNullOrEmpty(t.Text) || !String.IsNullOrWhiteSpace(t.Text)))
             {
                 t.Text = t.Text + " € ";
+            }
+        }
+        private void LabelAddCurrencySign(Label l)
+        {
+            if (!l.Text.Contains("€") && (!String.IsNullOrEmpty(l.Text) || !String.IsNullOrWhiteSpace(l.Text)))
+            {
+                l.Text = l.Text + " € ";
             }
         }
 
@@ -108,22 +116,47 @@ namespace Pizza
             textBoxPricePayed.Enabled = true;
         }
 
-        public void CalcSums()
+        public void CalcControlSums()
         {
-            // calc price with discount
+            // calculate price with discount
+            decimal priceWithDiscount = OrderProps.Price - (OrderProps.Discount + OrderProps.Credit);
 
-            OrderProps.PriceWithDiscount = OrderProps.Price - (OrderProps.Discount - OrderProps.Credit);
-            if (OrderProps.Discount > OrderProps.Price)
+            if (OrderProps.PriceWithDiscount < 0)
             {
                 this.labelPriceWithDiscount.Text = "  ???";
+                MessageBox.Show("Bitte Eingabe prüfen!", "Fehler", MessageBoxButtons.OK);
             }
             else
             {
-                decimal x = OrderProps.Price - OrderProps.Discount;
-                this.labelPriceWithDiscount.Text = x.ToString();
+                OrderProps.PriceWithDiscount = priceWithDiscount;
             }
 
-            // calc change
+            // calculate change
+            decimal change = OrderProps.PriceWithDiscount - OrderProps.PricePayed;
+
+            if (OrderProps.Change < 0)
+            {
+                this.labelChange.Text = "  ???";
+                MessageBox.Show("Bitte Eingabe prüfen!", "Fehler", MessageBoxButtons.OK);
+            }
+            else
+            {
+                OrderProps.Change = change;
+            }
+
+            // calculate credit
+            decimal credit = OrderProps.Change - OrderProps.Tip;
+
+            if (OrderProps.Credit < 0)
+            {
+                MessageBox.Show("Trinkgeld größer als Guthaben, bitte korrigieren!", "Fehler", MessageBoxButtons.OK);
+            }
+            else
+            {
+                OrderProps.Credit = credit;
+            }
+
+            // calculate overall sums
         }
 
         #endregion
@@ -182,7 +215,6 @@ namespace Pizza
             }
 
             TextBoxAddCurrencySign(textBoxPrice);
-            CalcSums();
         }
 
         private void TextBoxSum_MouseClick(object sender, MouseEventArgs e)
@@ -298,15 +330,19 @@ namespace Pizza
             }
         }
 
-        // Update the text boxes and labels of the control with there corresponding Properties if they've been changed.
+        // Update the text boxes and labels of the order control with their corresponding Properties if they've been changed.
         // This will guarantee consistent data between the shown value in the UI elements and the stored Property.
-        private void OrderProps_ControlValueChanged(Object objSender, EventArgs e)
+        private void OrderProps_ControlValueChanged(object objSender, EventArgs e)
         {
+            if (this.OrderControlChanged != null)
+            {
+                this.OrderControlChanged(this, e);
+            }
+
             switch (objSender as string)
             {
                 case "Articles":
                     textBoxOrder.Text = OrderProps.Articles;
-                    DialogResult dialogResult = MessageBox.Show("EventHandleeeeer", "%$(&§$%/§(?=)(", MessageBoxButtons.OK);
                     break;
 
                 case "CustomerName":
@@ -323,22 +359,33 @@ namespace Pizza
                     TextBoxAddCurrencySign(textBoxDiscount);
                     break;
 
-                case "Credit":
-                    break;
+                //case "Credit":
+                //    labelCredit.Text = OrderProps.Credit.ToString();
+                //    LabelAddCurrencySign(labelCredit);
+                //    break;
 
                 case "PriceWithDiscount":
+                    labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString();
+                    LabelAddCurrencySign(labelPriceWithDiscount);
                     break;
 
                 case "PricePayed":
+                    textBoxPricePayed.Text = OrderProps.PricePayed.ToString();
+                    TextBoxAddCurrencySign(textBoxPricePayed);
                     break;
 
                 case "Change":
+                    labelChange.Text = OrderProps.Change.ToString();
+                    LabelAddCurrencySign(labelChange);
                     break;
 
                 case "Tip":
+                    textBoxTip.Text = OrderProps.Tip.ToString();
+                    TextBoxAddCurrencySign(textBoxTip);
                     break;
 
                 case "Ordered":
+                    checkBoxOrder.Checked = OrderProps.Ordered;
                     break;
 
                 default:

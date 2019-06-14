@@ -47,9 +47,9 @@
             this.labelCustomerName.Location = new System.Drawing.Point(4, 10);
             this.labelCustomerName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelCustomerName.Name = "labelCustomerName";
-            this.labelCustomerName.Size = new System.Drawing.Size(85, 20);
+            this.labelCustomerName.Size = new System.Drawing.Size(93, 20);
             this.labelCustomerName.TabIndex = 0;
-            this.labelCustomerName.Text = "Dominique";
+            this.labelCustomerName.Text = "Besteller 99";
             // 
             // textBoxOrder
             // 

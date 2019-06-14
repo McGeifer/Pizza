@@ -143,6 +143,8 @@ namespace Pizza
             string filePath = ".\\orders.xml";
             FileStream fileStream = null;
             XmlSerializer deserializer = new XmlSerializer(typeof(List<Order>));
+            DialogResult dialogSelectFile;
+            DialogResult dialogNewXmlFile;
 
             // Try to read the contents of the XML file into a fileStream.
             // If the XML file could not be found, open a file dialog to select it manually.
@@ -154,7 +156,7 @@ namespace Pizza
             }
             catch (FileNotFoundException)
             {
-                DialogResult dialogSelectFile = MessageBox.Show("Die Bestelldaten konnten nicht gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
+                dialogSelectFile = MessageBox.Show("Die Bestelldaten (orders.xml) konnten nicht gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
 
                 if (dialogSelectFile == DialogResult.Yes)
                 {
@@ -175,6 +177,18 @@ namespace Pizza
                         }
                     }
                 }
+                else
+                {
+                    // Generate a new XML file?
+                    dialogNewXmlFile = MessageBox.Show("Soll eine neu Datei für Bestelldaten erzeugt werden?"
+                        + Environment.NewLine + Environment.NewLine + "Nein - beendet das Programm", "Warnung", MessageBoxButtons.YesNo);
+
+                    if (dialogNewXmlFile == DialogResult.No)
+                    {
+                        Application.Exit();
+                        return;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -185,8 +199,6 @@ namespace Pizza
             
             if (fileStream == null)
             {
-                MessageBox.Show("Keine gültigen Bestelldaten vorhanden - Anwendung kann nicht ausgeführt werden!", "Fehler", MessageBoxButtons.OK);
-                Application.Exit();
                 return;
             }
 
@@ -263,13 +275,14 @@ namespace Pizza
         {
             if (order.OrderPropsLst.Any())
             {
-                // Disable MainForm layout logic while changing controls for besser visuals.
+                // Disable MainForm layout logic while changing controls for better visuals.
                 this.SuspendLayout();
 
                 // Clean order table by removing all controls from the panel an the OrderCrtlLst.
                 while (OrderCrtlLst.Count > 0)
                 {
                     panelOrder.Controls.Remove(OrderCrtlLst[0]);
+                    OrderCrtlLst[0].OrderControlChanged -= OrderControl_ControlValueChanged;
                     OrderCrtlLst[0].Dispose();
                     OrderCrtlLst.Remove(OrderCrtlLst[0]);
                 }
@@ -282,6 +295,7 @@ namespace Pizza
                     OrderCrtlLst.Add(orderControl);
                     panelOrder.Controls.Add(orderControl);
                     orderControl.Location = new Point(1, OrderCrtlLst.Count == 1 ? 0 : (OrderCrtlLst.Count - 1) * orderControl.Height);
+                    orderControl.OrderControlChanged += new EventHandler(OrderControl_ControlValueChanged);
                 }
 
                 // Disable all controls if an order has been submitted.
@@ -323,6 +337,11 @@ namespace Pizza
                     NewOrderTable(OrdersLst[i]);
                 }
             }
+        }
+
+        private void OrderControl_ControlValueChanged(object objSender, EventArgs e)
+        {
+            MessageBox.Show("Ein UserControl wurde geändert", "Info", MessageBoxButtons.OK);
         }
     }
 }
