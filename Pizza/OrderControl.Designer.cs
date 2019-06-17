@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.labelCustomerName = new System.Windows.Forms.Label();
-            this.textBoxOrder = new System.Windows.Forms.TextBox();
+            this.textBoxArticle = new System.Windows.Forms.TextBox();
             this.checkBoxOrder = new System.Windows.Forms.CheckBox();
             this.textBoxPrice = new System.Windows.Forms.TextBox();
             this.textBoxDiscount = new System.Windows.Forms.TextBox();
@@ -51,18 +51,18 @@
             this.labelCustomerName.TabIndex = 0;
             this.labelCustomerName.Text = "Besteller 99";
             // 
-            // textBoxOrder
+            // textBoxArticle
             // 
-            this.textBoxOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxOrder.Location = new System.Drawing.Point(100, 7);
-            this.textBoxOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBoxOrder.Multiline = true;
-            this.textBoxOrder.Name = "textBoxOrder";
-            this.textBoxOrder.Size = new System.Drawing.Size(300, 26);
-            this.textBoxOrder.TabIndex = 1;
-            this.textBoxOrder.Text = "Bestellung";
-            this.textBoxOrder.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxOrder_MouseClick);
-            this.textBoxOrder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxOrder_KeyPress);
+            this.textBoxArticle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxArticle.Location = new System.Drawing.Point(100, 7);
+            this.textBoxArticle.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxArticle.Multiline = true;
+            this.textBoxArticle.Name = "textBoxArticle";
+            this.textBoxArticle.Size = new System.Drawing.Size(300, 26);
+            this.textBoxArticle.TabIndex = 1;
+            this.textBoxArticle.Text = "Bestellung";
+            this.textBoxArticle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxArticle_KeyPress);
+            this.textBoxArticle.Leave += new System.EventHandler(this.TextBoxArticle_Leave);
             // 
             // checkBoxOrder
             // 
@@ -72,7 +72,7 @@
             this.checkBoxOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxOrder.Name = "checkBoxOrder";
             this.checkBoxOrder.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxOrder.TabIndex = 5;
+            this.checkBoxOrder.TabIndex = 6;
             this.checkBoxOrder.UseVisualStyleBackColor = true;
             this.checkBoxOrder.Click += new System.EventHandler(this.CheckBoxOrder_Click);
             // 
@@ -83,11 +83,12 @@
             this.textBoxPrice.Name = "textBoxPrice";
             this.textBoxPrice.Size = new System.Drawing.Size(65, 26);
             this.textBoxPrice.TabIndex = 2;
-            this.textBoxPrice.Text = "15,99 € ";
+            this.textBoxPrice.Text = "0,00 € ";
             this.textBoxPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBoxPrice.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSum_MouseClick);
+            this.textBoxPrice.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxPrice_MouseClick);
             this.textBoxPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxPrice_KeyPress);
             this.textBoxPrice.Leave += new System.EventHandler(this.TextBoxPrice_Leave);
+            this.textBoxPrice.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxPrice_MouseDoubleClick);
             // 
             // textBoxDiscount
             // 
@@ -96,23 +97,23 @@
             this.textBoxDiscount.Name = "textBoxDiscount";
             this.textBoxDiscount.Size = new System.Drawing.Size(65, 26);
             this.textBoxDiscount.TabIndex = 3;
-            this.textBoxDiscount.Text = "15,99 € ";
+            this.textBoxDiscount.Text = "0,00 € ";
             this.textBoxDiscount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBoxDiscount.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxDiscount_MouseClick);
             this.textBoxDiscount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDiscount_KeyPress);
             this.textBoxDiscount.Leave += new System.EventHandler(this.TextBoxDiscount_Leave);
+            this.textBoxDiscount.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxDiscount_MouseDoubleClick);
             // 
             // labelPriceWithDiscount
             // 
-            this.labelPriceWithDiscount.AutoSize = true;
             this.labelPriceWithDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPriceWithDiscount.Location = new System.Drawing.Point(620, 10);
             this.labelPriceWithDiscount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPriceWithDiscount.Name = "labelPriceWithDiscount";
             this.labelPriceWithDiscount.Size = new System.Drawing.Size(62, 20);
             this.labelPriceWithDiscount.TabIndex = 0;
-            this.labelPriceWithDiscount.Text = "15,99 €";
-            this.labelPriceWithDiscount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelPriceWithDiscount.Text = "0,00 € ";
+            this.labelPriceWithDiscount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBoxPricePayed
             // 
@@ -121,23 +122,23 @@
             this.textBoxPricePayed.Name = "textBoxPricePayed";
             this.textBoxPricePayed.Size = new System.Drawing.Size(65, 26);
             this.textBoxPricePayed.TabIndex = 4;
-            this.textBoxPricePayed.Text = "15,99 € ";
+            this.textBoxPricePayed.Text = "0,00 € ";
             this.textBoxPricePayed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBoxPricePayed.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxPricePayed_MouseClick);
             this.textBoxPricePayed.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxPricePayed_KeyPress);
             this.textBoxPricePayed.Leave += new System.EventHandler(this.TextBoxPricePayed_Leave);
+            this.textBoxPricePayed.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxPricePayed_MouseDoubleClick);
             // 
             // labelChange
             // 
-            this.labelChange.AutoSize = true;
             this.labelChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelChange.Location = new System.Drawing.Point(764, 10);
             this.labelChange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelChange.Name = "labelChange";
             this.labelChange.Size = new System.Drawing.Size(62, 20);
             this.labelChange.TabIndex = 0;
-            this.labelChange.Text = "15,99 €";
-            this.labelChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelChange.Text = "0,00 € ";
+            this.labelChange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // textBoxTip
             // 
@@ -145,24 +146,24 @@
             this.textBoxTip.Location = new System.Drawing.Point(843, 7);
             this.textBoxTip.Name = "textBoxTip";
             this.textBoxTip.Size = new System.Drawing.Size(65, 26);
-            this.textBoxTip.TabIndex = 6;
-            this.textBoxTip.Text = "15,99 € ";
+            this.textBoxTip.TabIndex = 5;
+            this.textBoxTip.Text = "0,00 € ";
             this.textBoxTip.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBoxTip.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxTip_MouseClick);
             this.textBoxTip.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxTip_KeyPress);
             this.textBoxTip.Leave += new System.EventHandler(this.TextBoxTip_Leave);
+            this.textBoxTip.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxTip_MouseDoubleClick);
             // 
             // labelCredit
             // 
-            this.labelCredit.AutoSize = true;
             this.labelCredit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCredit.Location = new System.Drawing.Point(550, 10);
             this.labelCredit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelCredit.Name = "labelCredit";
             this.labelCredit.Size = new System.Drawing.Size(62, 20);
             this.labelCredit.TabIndex = 7;
-            this.labelCredit.Text = "15,99 €";
-            this.labelCredit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelCredit.Text = "0,00 € ";
+            this.labelCredit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // OrderControl
             // 
@@ -178,7 +179,7 @@
             this.Controls.Add(this.textBoxDiscount);
             this.Controls.Add(this.textBoxPrice);
             this.Controls.Add(this.checkBoxOrder);
-            this.Controls.Add(this.textBoxOrder);
+            this.Controls.Add(this.textBoxArticle);
             this.Controls.Add(this.labelCustomerName);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -192,7 +193,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelCustomerName;
-        private System.Windows.Forms.TextBox textBoxOrder;
+        private System.Windows.Forms.TextBox textBoxArticle;
         private System.Windows.Forms.CheckBox checkBoxOrder;
         private System.Windows.Forms.TextBox textBoxPrice;
         private System.Windows.Forms.TextBox textBoxDiscount;

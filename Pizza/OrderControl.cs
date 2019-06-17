@@ -102,7 +102,7 @@ namespace Pizza
 
         private void DisableCustomerControl()
         {
-            textBoxOrder.Enabled = false;
+            textBoxArticle.Enabled = false;
             textBoxPrice.Enabled = false;
             textBoxDiscount.Enabled = false;
             textBoxPricePayed.Enabled = false;
@@ -110,7 +110,7 @@ namespace Pizza
 
         private void EnableCustomerControl()
         {
-            textBoxOrder.Enabled = true;
+            textBoxArticle.Enabled = true;
             textBoxPrice.Enabled = true;
             textBoxDiscount.Enabled = true;
             textBoxPricePayed.Enabled = true;
@@ -121,54 +121,57 @@ namespace Pizza
             // calculate price with discount
             decimal priceWithDiscount = OrderProps.Price - (OrderProps.Discount + OrderProps.Credit);
 
-            if (OrderProps.PriceWithDiscount < 0)
+            if (priceWithDiscount < 0)
             {
-                this.labelPriceWithDiscount.Text = "  ???";
-                MessageBox.Show("Bitte Eingabe prüfen!", "Fehler", MessageBoxButtons.OK);
+                this.labelPriceWithDiscount.Text = " ??? ";
+                MessageBox.Show("Rabatt größer als Preis!", "Fehler", MessageBoxButtons.OK);
+                this.textBoxDiscount.SelectAll();
+                this.textBoxDiscount.Focus();
             }
             else
             {
                 OrderProps.PriceWithDiscount = priceWithDiscount;
+                this.labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString("N2") + " € ";
             }
 
             // calculate change
-            decimal change = OrderProps.PriceWithDiscount - OrderProps.PricePayed;
+            decimal change = OrderProps.PricePayed - OrderProps.PriceWithDiscount;
+            OrderProps.Change = change;
+            this.labelChange.Text = OrderProps.Change.ToString("N2") + " € ";
 
-            if (OrderProps.Change < 0)
+            //check tip, recalculate change
+            if (textBoxTip.Text != " ??? ")
             {
-                this.labelChange.Text = "  ???";
-                MessageBox.Show("Bitte Eingabe prüfen!", "Fehler", MessageBoxButtons.OK);
+                if (OrderProps.Tip > OrderProps.Change && OrderProps.Tip != 0)
+                {
+                    MessageBox.Show("Trinkgeld größer als Guthaben!", "Fehler", MessageBoxButtons.OK);
+                    textBoxTip.Text = " ??? ";
+                    this.textBoxTip.SelectAll();
+                    this.textBoxTip.Focus();
+                }
+                else
+                {
+                    if (decimal.TryParse(textBoxTip.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+                    {
+                        OrderProps.Tip = d;
+                        OrderProps.Change = OrderProps.Change - OrderProps.Tip;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+                    }
+                }
             }
-            else
-            {
-                OrderProps.Change = change;
-            }
-
-            // calculate credit
-            decimal credit = OrderProps.Change - OrderProps.Tip;
-
-            if (OrderProps.Credit < 0)
-            {
-                MessageBox.Show("Trinkgeld größer als Guthaben, bitte korrigieren!", "Fehler", MessageBoxButtons.OK);
-            }
-            else
-            {
-                OrderProps.Credit = credit;
-            }
-
-            // calculate overall sums
         }
 
         #endregion
 
         #region event handler
 
-        private void TextBoxOrder_MouseClick(object sender, MouseEventArgs e)
-        {
-            textBoxOrder.SelectAll();
-        }
-
-        private void TextBoxOrder_KeyPress(object sender, KeyPressEventArgs e)
+        // 
+        //  TextBox Article
+        //
+        private void TextBoxArticle_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
             {
@@ -177,6 +180,14 @@ namespace Pizza
             }
         }
 
+        private void TextBoxArticle_Leave(object sender, EventArgs e)
+        {
+            OrderProps.Articles = textBoxArticle.Text;
+        }
+
+        // 
+        //  TextBox Price
+        //
         private void TextBoxPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
@@ -200,28 +211,34 @@ namespace Pizza
         {
             if (textBoxPrice.Text == String.Empty)
             {
-                textBoxPrice.Text = "0,00 €";
+                OrderProps.Price = 0;
+            }
+
+            if (decimal.TryParse(textBoxPrice.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+            {
+                OrderProps.Price = d;
+                CalcControlSums();
             }
             else
             {
-                try
-                {
-                    OrderProps.Price = Convert.ToDecimal(textBoxPrice.Text);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Eingabe ist keine Dezimalzahl! Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
-                }
+                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
             }
-
-            TextBoxAddCurrencySign(textBoxPrice);
         }
 
-        private void TextBoxSum_MouseClick(object sender, MouseEventArgs e)
+        private void TextBoxPrice_MouseClick(object sender, MouseEventArgs e)
+        {
+            textBoxPrice.Focus();
+        }
+
+        private void TextBoxPrice_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             textBoxPrice.SelectAll();
+            textBoxPrice.Focus();
         }
 
+        // 
+        //  TextBox Discount
+        //
         private void TextBoxDiscount_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
@@ -243,14 +260,36 @@ namespace Pizza
 
         private void TextBoxDiscount_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxDiscount);
+            if (textBoxDiscount.Text == String.Empty)
+            {
+                OrderProps.Discount = 0;
+            }
+            
+            if (decimal.TryParse(textBoxDiscount.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+            {
+                OrderProps.Discount = d;
+                CalcControlSums();
+            }
+            else
+            {
+                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+            }
         }
 
         private void TextBoxDiscount_MouseClick(object sender, MouseEventArgs e)
         {
-            textBoxDiscount.SelectAll();
+            textBoxDiscount.Focus();
         }
-       
+
+        private void TextBoxDiscount_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            textBoxDiscount.SelectAll();
+            textBoxDiscount.Focus();
+        }
+
+        // 
+        //  TextBox PricePayed
+        //
         private void TextBoxPricePayed_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
@@ -272,14 +311,36 @@ namespace Pizza
 
         private void TextBoxPricePayed_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxPricePayed);
+            if (textBoxPricePayed.Text == String.Empty)
+            {
+                OrderProps.PricePayed = 0;
+            }
+            
+            if (decimal.TryParse(textBoxPricePayed.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+            {
+                OrderProps.PricePayed = d;
+                CalcControlSums();
+            }
+            else
+            {
+                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+            }
         }
 
         private void TextBoxPricePayed_MouseClick(object sender, MouseEventArgs e)
         {
-            textBoxPricePayed.SelectAll();
+            textBoxPricePayed.Focus();
         }
 
+        private void TextBoxPricePayed_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            textBoxPricePayed.SelectAll();
+            textBoxPricePayed.Focus();
+        }
+
+        // 
+        //  TextBox Tip
+        //
         private void TextBoxTip_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (TextBoxInputConfirmed(e))
@@ -301,14 +362,36 @@ namespace Pizza
 
         private void TextBoxTip_Leave(object sender, EventArgs e)
         {
-            TextBoxAddCurrencySign(textBoxTip);
+            if (textBoxTip.Text == String.Empty)
+            {
+                OrderProps.Tip = 0;
+            }
+            
+            if (decimal.TryParse(textBoxTip.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+            {
+                OrderProps.Tip = d;
+                CalcControlSums();
+            }
+            else
+            {
+                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+            }
         }
 
         private void TextBoxTip_MouseClick(object sender, MouseEventArgs e)
         {
-            textBoxTip.SelectAll();
+            textBoxTip.Focus();
         }
 
+        private void TextBoxTip_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            textBoxTip.SelectAll();
+            textBoxTip.Focus();
+        }
+
+        // 
+        //  CheckBox Order
+        //
         private void CheckBoxOrder_Click(object sender, EventArgs e)
         {
             OrderProps.Articles = "Das ist ein Test";
@@ -342,7 +425,8 @@ namespace Pizza
             switch (objSender as string)
             {
                 case "Articles":
-                    textBoxOrder.Text = OrderProps.Articles;
+
+                    textBoxArticle.Text = OrderProps.Articles;
                     break;
 
                 case "CustomerName":
@@ -350,38 +434,31 @@ namespace Pizza
                     break;
 
                 case "Price":
-                    textBoxPrice.Text = OrderProps.Price.ToString();
-                    TextBoxAddCurrencySign(textBoxPrice);
+                    textBoxPrice.Text = OrderProps.Price.ToString("N2") + " € ";
                     break;
 
                 case "Discount":
-                    textBoxDiscount.Text = OrderProps.Discount.ToString();
-                    TextBoxAddCurrencySign(textBoxDiscount);
+                    textBoxDiscount.Text = OrderProps.Discount.ToString("N2") + " € ";
                     break;
 
                 //case "Credit":
                 //    labelCredit.Text = OrderProps.Credit.ToString();
-                //    LabelAddCurrencySign(labelCredit);
                 //    break;
 
                 case "PriceWithDiscount":
-                    labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString();
-                    LabelAddCurrencySign(labelPriceWithDiscount);
+                    labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString("N2") + " € ";
                     break;
 
                 case "PricePayed":
-                    textBoxPricePayed.Text = OrderProps.PricePayed.ToString();
-                    TextBoxAddCurrencySign(textBoxPricePayed);
+                    textBoxPricePayed.Text = OrderProps.PricePayed.ToString("N2") + " € ";
                     break;
 
                 case "Change":
-                    labelChange.Text = OrderProps.Change.ToString();
-                    LabelAddCurrencySign(labelChange);
+                    labelChange.Text = OrderProps.Change.ToString("N2") + " € ";
                     break;
 
                 case "Tip":
-                    textBoxTip.Text = OrderProps.Tip.ToString();
-                    TextBoxAddCurrencySign(textBoxTip);
+                    textBoxTip.Text = OrderProps.Tip.ToString("N2") + " € ";
                     break;
 
                 case "Ordered":
@@ -392,7 +469,6 @@ namespace Pizza
                     break;
             }
         }
-
         #endregion
     }
 }

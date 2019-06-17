@@ -75,8 +75,6 @@ namespace Pizza
             }
         }
 
-
-
         public OrderProps()
         {
 
@@ -228,15 +226,7 @@ namespace Pizza
             }
             set
             {
-                if (value < 0)
-                {
-                    _change = 0;
-                }
-                else
-                {
-                    _change = value;
-                }
-
+                _change = value;
                 OnControlValueChanged(EventArgs.Empty, "Change");
             }
         }
@@ -258,7 +248,7 @@ namespace Pizza
                     _credit = value;
                 }
 
-                //OnControlValueChanged(EventArgs.Empty, "Credit");
+                OnControlValueChanged(EventArgs.Empty, "Credit");
             }
         }
 

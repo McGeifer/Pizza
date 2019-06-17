@@ -57,17 +57,17 @@
             this.labelAverageOrdersSum = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.panelOrderHead = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
             this.panelOrder = new System.Windows.Forms.Panel();
             this.panelOrderSums = new System.Windows.Forms.Panel();
-            this.label22 = new System.Windows.Forms.Label();
+            this.labelTotalTip = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
+            this.labelTotalPayed = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
+            this.labelTotalPrice = new System.Windows.Forms.Label();
+            this.labelTotalPriceWithDiscount = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
-            this.label26 = new System.Windows.Forms.Label();
             this.groupBoxOrderManagement.SuspendLayout();
             this.groupBoxStatistics.SuspendLayout();
             this.panelOrderHead.SuspendLayout();
@@ -378,6 +378,16 @@
             this.panelOrderHead.Size = new System.Drawing.Size(1005, 38);
             this.panelOrderHead.TabIndex = 13;
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.Location = new System.Drawing.Point(557, 4);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(49, 20);
+            this.label26.TabIndex = 13;
+            this.label26.Text = "Guth.";
+            // 
             // panelOrder
             // 
             this.panelOrder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -396,12 +406,12 @@
             // 
             this.panelOrderSums.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelOrderSums.BackColor = System.Drawing.SystemColors.Control;
-            this.panelOrderSums.Controls.Add(this.label22);
+            this.panelOrderSums.Controls.Add(this.labelTotalTip);
             this.panelOrderSums.Controls.Add(this.label21);
-            this.panelOrderSums.Controls.Add(this.label23);
+            this.panelOrderSums.Controls.Add(this.labelTotalPayed);
             this.panelOrderSums.Controls.Add(this.label20);
-            this.panelOrderSums.Controls.Add(this.label24);
-            this.panelOrderSums.Controls.Add(this.label25);
+            this.panelOrderSums.Controls.Add(this.labelTotalPrice);
+            this.panelOrderSums.Controls.Add(this.labelTotalPriceWithDiscount);
             this.panelOrderSums.Controls.Add(this.label19);
             this.panelOrderSums.Controls.Add(this.label28);
             this.panelOrderSums.Location = new System.Drawing.Point(12, 184);
@@ -410,16 +420,16 @@
             this.panelOrderSums.Size = new System.Drawing.Size(1005, 54);
             this.panelOrderSums.TabIndex = 14;
             // 
-            // label22
+            // labelTotalTip
             // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(837, 27);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(71, 20);
-            this.label22.TabIndex = 19;
-            this.label22.Text = "999,99 €";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelTotalTip.AutoSize = true;
+            this.labelTotalTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTotalTip.Location = new System.Drawing.Point(837, 27);
+            this.labelTotalTip.Name = "labelTotalTip";
+            this.labelTotalTip.Size = new System.Drawing.Size(71, 20);
+            this.labelTotalTip.TabIndex = 19;
+            this.labelTotalTip.Text = "999,99 €";
+            this.labelTotalTip.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label21
             // 
@@ -431,16 +441,16 @@
             this.label21.TabIndex = 13;
             this.label21.Text = "Gesamt";
             // 
-            // label23
+            // labelTotalPayed
             // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(683, 27);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(71, 20);
-            this.label23.TabIndex = 16;
-            this.label23.Text = "999,99 €";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelTotalPayed.AutoSize = true;
+            this.labelTotalPayed.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTotalPayed.Location = new System.Drawing.Point(683, 27);
+            this.labelTotalPayed.Name = "labelTotalPayed";
+            this.labelTotalPayed.Size = new System.Drawing.Size(71, 20);
+            this.labelTotalPayed.TabIndex = 16;
+            this.labelTotalPayed.Text = "999,99 €";
+            this.labelTotalPayed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label20
             // 
@@ -450,27 +460,27 @@
             this.label20.Size = new System.Drawing.Size(980, 2);
             this.label20.TabIndex = 14;
             // 
-            // label24
+            // labelTotalPrice
             // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(400, 27);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(71, 20);
-            this.label24.TabIndex = 13;
-            this.label24.Text = "999,99 €";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelTotalPrice.AutoSize = true;
+            this.labelTotalPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTotalPrice.Location = new System.Drawing.Point(400, 27);
+            this.labelTotalPrice.Name = "labelTotalPrice";
+            this.labelTotalPrice.Size = new System.Drawing.Size(71, 20);
+            this.labelTotalPrice.TabIndex = 13;
+            this.labelTotalPrice.Text = "999,99 €";
+            this.labelTotalPrice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label25
+            // labelTotalPriceWithDiscount
             // 
-            this.label25.AutoSize = true;
-            this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(613, 27);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(71, 20);
-            this.label25.TabIndex = 14;
-            this.label25.Text = "999,99 €";
-            this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelTotalPriceWithDiscount.AutoSize = true;
+            this.labelTotalPriceWithDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTotalPriceWithDiscount.Location = new System.Drawing.Point(613, 27);
+            this.labelTotalPriceWithDiscount.Name = "labelTotalPriceWithDiscount";
+            this.labelTotalPriceWithDiscount.Size = new System.Drawing.Size(71, 20);
+            this.labelTotalPriceWithDiscount.TabIndex = 14;
+            this.labelTotalPriceWithDiscount.Text = "999,99 €";
+            this.labelTotalPriceWithDiscount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label19
             // 
@@ -489,16 +499,6 @@
             this.label28.Size = new System.Drawing.Size(0, 20);
             this.label28.TabIndex = 18;
             this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(557, 4);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(49, 20);
-            this.label26.TabIndex = 13;
-            this.label26.Text = "Guth.";
             // 
             // MainForm
             // 
@@ -564,10 +564,10 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label labelTotalTip;
+        private System.Windows.Forms.Label labelTotalPayed;
+        private System.Windows.Forms.Label labelTotalPrice;
+        private System.Windows.Forms.Label labelTotalPriceWithDiscount;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label26;
     }

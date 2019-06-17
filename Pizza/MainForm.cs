@@ -341,7 +341,33 @@ namespace Pizza
 
         private void OrderControl_ControlValueChanged(object objSender, EventArgs e)
         {
-            MessageBox.Show("Ein UserControl wurde geändert", "Info", MessageBoxButtons.OK);
+            // calculate total sums for the order
+            decimal totalPrice = 0;
+            decimal totalPriceWithDiscount = 0;
+            decimal totalPricePayed = 0;
+            decimal totalTip = 0;
+            
+            foreach (OrderProps orderProps in LastOrder.OrderPropsLst)
+            {
+                totalPrice += orderProps.Price;
+                totalPriceWithDiscount += orderProps.PriceWithDiscount;
+                totalPricePayed += orderProps.PricePayed;
+                totalTip += orderProps.Tip;
+            }
+
+            labelTotalPrice.Text = totalPrice.ToString("N2") + " € ";
+            labelTotalPriceWithDiscount.Text = totalPriceWithDiscount.ToString("N2") + " € ";
+            labelTotalPayed.Text = totalPricePayed.ToString("N2") + " € ";
+            labelTotalTip.Text = totalTip.ToString("N2") + " € ";
+
+            // calc statistics for nerds
+            //foreach (Order order in OrdersLst)
+            //{
+            //    foreach (OrderProps orderProps in order.OrderPropsLst)
+            //    {
+                    
+            //    }
+            //}
         }
     }
 }
