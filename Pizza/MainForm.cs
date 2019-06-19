@@ -16,18 +16,59 @@ namespace Pizza
 {
     public partial class MainForm : Form
     {
+        #region Properties
+
         private List<Order> _ordersLst = new List<Order>();
         private Order _lastOrder = new Order();
         private List<OrderControl> _orderCrtlLst = new List<OrderControl>();
+        private bool _dataHasChanged = false;
+
+        private List<Order> OrdersLst
+        {
+            get => _ordersLst;
+            set => _ordersLst = value;
+        }
+
+        private List<OrderControl> OrderCrtlLst
+        {
+            get => _orderCrtlLst;
+            set => _orderCrtlLst = value;
+        }
+
+        private Order LastOrder
+        {
+            get => _lastOrder;
+            set => _lastOrder = value;
+        }
+
+        public bool DataHasChanged
+        {
+            get => _dataHasChanged;
+            set 
+            {
+                if (value)
+                {
+                    buttonSave.Enabled = true;
+                }
+                else
+                {
+                    buttonSave.Enabled = false;
+                }
+
+                _dataHasChanged = value;
+            }
+        }
+
+        #endregion
+
+        #region Constants
+
         private const int MainFormHeightOffset = 110;
+        private const string XmlFilePath = ".\\orders.xml";
 
-        // Nur für Testzwecke
-        // private List<Orders> ordersLstTmp = new List<Orders>();
-        // private List<OrderProps> orderPropsLst = new List<OrderProps>();
+        #endregion
 
-        //private XmlSerializer serializer;
-        //private FileStream fileStream;
-
+        #region Methods
 
         public MainForm()
         {
@@ -35,108 +76,17 @@ namespace Pizza
             this.Shown += new System.EventHandler(this.MainForm_Shown);
         }
 
-        private void MainForm_Shown(Object sender, EventArgs e)
+        void SerializeOrdersXml()
         {
-            // Set MaximumSize for MainForm to always fit screen
-            this.MaximumSize = new System.Drawing.Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
+            XmlSerializer serializer;
+            FileStream fileStream;
 
-            // Set MaximumSize for orderPanel to always fit into MainForm with a height set to a multiple of the OrderControl height
-            // (for better visuals when scrolling inside a longer list of orders).
-            OrderControl orderControl = new OrderControl();
-            int orderControlHeight = orderControl.Height;
-            orderControl.Dispose();
+            serializer = new XmlSerializer(typeof(List<Order>));
+            fileStream = new FileStream(XmlFilePath, FileMode.Create);
+            serializer.Serialize(fileStream, OrdersLst);
+            fileStream.Close();
 
-            int tmp = 0;
-
-            while (true)
-            {
-                tmp += orderControlHeight;
-
-                if (tmp >= Screen.PrimaryScreen.WorkingArea.Height - 250)
-                {
-                    panelOrder.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, tmp - orderControlHeight);
-                    break;
-                }
-            }
-
-            // Initialize data structures and populate the order table and MainForm.
-            DeserializeOrdersXml();
-            InitComboBoxOrders();
-            InitOrderTable();
         }
-
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    // create test XML file
-
-        //    OrderProps props1 = new OrderProps
-        //    {
-        //        CustomerName = "Test1"
-        //    };
-
-        //    OrderProps props2 = new OrderProps
-        //    {
-        //        CustomerName = "Test2"
-        //    };
-
-        //    OrderProps props3 = new OrderProps
-        //    {
-        //        CustomerName = "Test3"
-        //    };
-
-        //    OrderProps props4 = new OrderProps
-        //    {
-        //        CustomerName = "Test4"
-        //    };
-
-        //    OrderProps props5 = new OrderProps
-        //    {
-        //        CustomerName = "Test5"
-        //    };
-
-        //    List<OrderProps> propsLst = new List<OrderProps>
-        //    {
-        //        props1,
-        //        props2,
-        //        props3,
-        //        props4,
-        //        props5
-        //    };
-
-        //    Orders orderTmp1 = new Orders
-        //    {
-        //        OrderTimestamp = DateTime.Parse("2019-04-01T18:45:32"),
-        //        OrderPropsLst = propsLst,
-        //        OrderTitle = "Order 1"
-        //    };
-
-        //    Orders orderTmp2 = new Orders
-        //    {
-        //        OrderTimestamp = DateTime.Parse("2019-07-01T18:45:32"),
-        //        OrderPropsLst = propsLst,
-
-        //        OrderTitle = "Order 2"
-        //    };
-
-        //    Orders orderTmp3 = new Orders
-        //    {
-        //        OrderTimestamp = DateTime.Parse("2019-11-01T18:45:32"),
-        //        OrderPropsLst = propsLst,
-
-        //        OrderTitle = "Order 3"
-        //    };
-
-        //    OrdersLstTmp.Add(orderTmp1);
-        //    OrdersLstTmp.Add(orderTmp2);
-        //    OrdersLstTmp.Add(orderTmp3);
-
-        //    serializer = new XmlSerializer(typeof(List<Orders>));
-        //    fileStream = new FileStream(@".\orders.xml", FileMode.Create);
-        //    serializer.Serialize(fileStream, OrdersLstTmp);
-        //    fileStream.Close();
-        //}
-
-        // load orders from XML file
 
         void DeserializeOrdersXml()
         {
@@ -156,7 +106,8 @@ namespace Pizza
             }
             catch (FileNotFoundException)
             {
-                dialogSelectFile = MessageBox.Show("Die Bestelldaten (orders.xml) konnten nicht gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
+                dialogSelectFile = MessageBox.Show("Die Bestelldaten (orders.xml) konnten nicht" +
+                    " gefunden werden. Datei manuell auswählen?", "Warnung", MessageBoxButtons.YesNo);
 
                 if (dialogSelectFile == DialogResult.Yes)
                 {
@@ -181,7 +132,8 @@ namespace Pizza
                 {
                     // Generate a new XML file?
                     dialogNewXmlFile = MessageBox.Show("Soll eine neu Datei für Bestelldaten erzeugt werden?"
-                        + Environment.NewLine + Environment.NewLine + "Nein - beendet das Programm", "Warnung", MessageBoxButtons.YesNo);
+                        + Environment.NewLine + Environment.NewLine + "Nein - beendet das Programm",
+                        "Warnung", MessageBoxButtons.YesNo);
 
                     if (dialogNewXmlFile == DialogResult.No)
                     {
@@ -192,11 +144,12 @@ namespace Pizza
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unbekannter Fehler - Anwendung kann nicht ausgeführt werden!" + ex, "Fehler", MessageBoxButtons.OK);
+                MessageBox.Show("Unbekannter Fehler - Anwendung kann nicht ausgeführt werden!" + ex,
+                    "Fehler", MessageBoxButtons.OK);
                 Application.Exit();
                 return;
             }
-            
+
             if (fileStream == null)
             {
                 return;
@@ -218,7 +171,8 @@ namespace Pizza
                     exceptionMsg = exceptionMsg + "InnerException: " + ex;
                 }
 
-                DialogResult dialogResultXmlDeserializeException = MessageBox.Show(exceptionMsg, "Fehler", MessageBoxButtons.OK);
+                DialogResult dialogResultXmlDeserializeException = MessageBox.Show(exceptionMsg,
+                    "Fehler", MessageBoxButtons.OK);
             }
             catch (Exception)
             {
@@ -232,12 +186,17 @@ namespace Pizza
                 }
             }
 
+            SetLastOrder();
+        }
+
+        private void SetLastOrder()
+        {
             if (OrdersLst.Any())
             {
                 LastOrder = OrdersLst.OrderBy(x => x.OrderTimestamp).Last() as Order;
             }
         }
-        
+
         // Add all orders (loaded from the XML file) to the combo box
         void InitComboBoxOrders()
         {
@@ -248,8 +207,8 @@ namespace Pizza
                 lst.Add(order.OrderTimestamp/*.ToString("yyyy-MM-ddThh:mm:ss", DateTimeFormatInfo.InvariantInfo)*/);
             }
 
-            lst.OrderBy(x => x.Year).ThenBy(x => x.Month).ThenBy(x => x.Day).ThenBy(x => x.TimeOfDay); // Sort list
-            comboBoxOrders.SelectedIndexChanged -= ComboBoxOrders_SelectedIndexChanged; // temporarily disable handler function
+            lst.OrderBy(x => x.Year).ThenBy(x => x.Month).ThenBy(x => x.Day).ThenBy(x => x.TimeOfDay); // sort list
+            comboBoxOrders.SelectedIndexChanged -= ComboBoxOrders_SelectedIndexChanged; // temporarily disable EventHandler
 
             foreach(DateTime dateTime in lst)
             {
@@ -264,10 +223,12 @@ namespace Pizza
             comboBoxOrders.SelectedIndexChanged += ComboBoxOrders_SelectedIndexChanged;
         }
 
-        // Generate table with a new by using the customers of the last order.
+        // Generate a new table by using the customers of the last order.
         void InitOrderTable()
         {
             NewOrderTable(LastOrder);
+            CalculateStatisticForNerds();
+            CalculateOrderSums();
         }
 
         // Create a new order table with a given order.
@@ -278,19 +239,11 @@ namespace Pizza
                 // Disable MainForm layout logic while changing controls for better visuals.
                 this.SuspendLayout();
 
-                // Clean order table by removing all controls from the panel an the OrderCrtlLst.
-                while (OrderCrtlLst.Count > 0)
-                {
-                    panelOrder.Controls.Remove(OrderCrtlLst[0]);
-                    OrderCrtlLst[0].OrderControlChanged -= OrderControl_ControlValueChanged;
-                    OrderCrtlLst[0].Dispose();
-                    OrderCrtlLst.Remove(OrderCrtlLst[0]);
-                }
+                CleanOrderPanel();
 
-                // Add new control for each customer of the given order.
+                // Add new control for each customer of the last order
                 foreach (OrderProps orderProps in order.OrderPropsLst)
                 {
-                    // Add new control for each customer of the last order
                     OrderControl orderControl = new OrderControl(orderProps);
                     OrderCrtlLst.Add(orderControl);
                     panelOrder.Controls.Add(orderControl);
@@ -311,14 +264,162 @@ namespace Pizza
                 this.ResumeLayout();
 
                 // Resize and position MainForm
-                this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
+                this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height
+                    + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
                 this.CenterToScreen();
             }
         }
 
-        private List<Order> OrdersLst { get => _ordersLst; set => _ordersLst = value; }
-        private List<OrderControl> OrderCrtlLst { get => _orderCrtlLst; set => _orderCrtlLst = value; }
-        private Order LastOrder { get => _lastOrder; set => _lastOrder = value; }
+        // Remove all controls from the panel an the OrderCrtlLst.
+        private void CleanOrderPanel()
+        {
+            while (OrderCrtlLst.Count > 0)
+            {
+                panelOrder.Controls.Remove(OrderCrtlLst[0]);
+                OrderCrtlLst[0].OrderControlChanged -= OrderControl_ControlValueChanged;
+                OrderCrtlLst[0].Dispose();
+                OrderCrtlLst.Remove(OrderCrtlLst[0]);
+            }
+        }
+
+        private void NewCustomer(string newCustomerName)
+        {
+            OrderProps orderProps = new OrderProps(newCustomerName);
+            OrderControl orderControl = new OrderControl(orderProps);
+
+            // Add new customer to active order data structure
+            OrdersLst[GetActiveOrderIndex()].OrderPropsLst.Add(orderProps);
+        
+            // Disable MainForm layout logic while adding control for better visuals.
+            this.SuspendLayout();
+
+            // Add new customer control to OrderCrtl list and to the proper panel
+            OrderCrtlLst.Add(orderControl);
+            panelOrder.Controls.Add(orderControl);
+            orderControl.Location = new Point(1, OrderCrtlLst.Count == 1 ? 0 : (OrderCrtlLst.Count - 1) * orderControl.Height);
+            orderControl.OrderControlChanged += new EventHandler(OrderControl_ControlValueChanged);
+
+            // re-enable MainForm layout logic.
+            this.ResumeLayout();
+
+            // Resize and position MainForm
+            this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height +
+                panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
+            this.CenterToScreen();
+        }
+
+        private void CalculateStatisticForNerds()
+        {
+            int totalOrders = 0;
+            decimal totalOrdersPrice = 0;
+            decimal totalOrdersTip = 0;
+            decimal averageOrdersPrice = 0;
+            decimal averageOrdersTip = 0;
+
+            totalOrders = OrdersLst.Count();
+
+            if (totalOrders > 0)
+            {
+                foreach (Order order in OrdersLst)
+                {
+                    foreach (OrderProps orderProps in order.OrderPropsLst)
+                    {
+                        totalOrdersPrice += orderProps.Price;
+                        totalOrdersTip += orderProps.Tip;
+                    }
+                }
+
+                averageOrdersPrice = totalOrdersPrice / totalOrders;
+                averageOrdersTip = totalOrdersTip / totalOrders;
+
+                labelTotalNumberOfOrders.Text = OrdersLst.Count().ToString("D");
+                labelTotalOrdersPrice.Text = totalOrdersPrice.ToString("N2") + " €";
+                labelAverageOrdersPrice.Text = averageOrdersPrice.ToString("N2") + " €";
+                labelTotalOrdersTip.Text = totalOrdersTip.ToString("N2") + " €";
+                labelAverageOrdersTip.Text = averageOrdersTip.ToString("N2") + " €"; 
+            }
+        }
+
+        private void CalculateOrderSums()
+        {
+            int orderIdx = GetActiveOrderIndex();
+            decimal totalPrice = 0;
+            decimal totalTip = 0;
+            decimal totalPriceWithDiscount = 0;
+            decimal totalPricePayed = 0;
+
+            if (orderIdx >= 0)
+            {
+                foreach (OrderProps orderProps in OrdersLst[orderIdx].OrderPropsLst)
+                {
+                    totalPrice += orderProps.Price;
+                    totalTip += orderProps.Tip;
+                    totalPriceWithDiscount += orderProps.PriceWithDiscount;
+                    totalPricePayed += orderProps.PricePayed;
+                }
+
+                labelTotalPrice.Text = totalPrice.ToString("N2") + " €";
+                labelTotalTip.Text = totalTip.ToString("N2") + " €";
+                labelTotalPriceWithDiscount.Text = totalPriceWithDiscount.ToString("N2") + " €";
+                labelTotalPricePayed.Text = totalPricePayed.ToString("N2") + " €"; 
+            }
+        }
+
+        // Function that determines the index of the currently selected Order from the OrdersLst.
+        private int GetActiveOrderIndex()
+        {
+            if (comboBoxOrders.Items.Count > 0)
+            {
+                string timeStamp = comboBoxOrders.SelectedItem.ToString();
+
+                foreach (Order order in OrdersLst)
+                {
+                    if (order.OrderTimestamp.ToString() == timeStamp)
+                    {
+                        return OrdersLst.IndexOf(order);
+                    }
+                } 
+            }
+
+            return -1;
+        }
+
+        #endregion
+
+        #region EventHandler
+
+        private void MainForm_Shown(Object sender, EventArgs e)
+        {
+            // Set MaximumSize for MainForm to always fit screen
+            this.MaximumSize = new System.Drawing.Size(Screen.PrimaryScreen.WorkingArea.Width,
+                Screen.PrimaryScreen.WorkingArea.Height);
+
+            // Set MaximumSize for orderPanel to always fit into MainForm with a height set to
+            // a multiple of the OrderControl height (for better visuals when scrolling inside
+            // a longer list of orders).
+            OrderControl orderControl = new OrderControl();
+            int orderControlHeight = orderControl.Height;
+            orderControl.Dispose();
+
+            int tmp = 0;
+
+            while (true)
+            {
+                tmp += orderControlHeight;
+
+                if (tmp >= Screen.PrimaryScreen.WorkingArea.Height - 250)
+                {
+                    panelOrder.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width,
+                        tmp - orderControlHeight);
+                    break;
+                }
+            }
+
+            // Initialize data structures and populate the order table and MainForm.
+            DeserializeOrdersXml();
+            InitComboBoxOrders();
+            InitOrderTable();
+        }
 
         private void ButtonConfig_Click(object sender, EventArgs e)
         {
@@ -328,46 +429,101 @@ namespace Pizza
 
         private void ComboBoxOrders_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DateTime timeStamp = DateTime.Parse(comboBoxOrders.SelectedItem.ToString());
+            DialogResult dialogChangeSelctedOrder = DialogResult.No;
 
-            for (int i = 0; i < _ordersLst.Count; i++)
+            if (DataHasChanged)
             {
-                if (OrdersLst[i].OrderTimestamp == timeStamp)
+                dialogChangeSelctedOrder = MessageBox.Show("Änderungen an aktueller" +
+                " Bestellung nicht gespeichert! \r\n\r\n" + "Dennoch fortfahren?", "Warnung",
+                MessageBoxButtons.YesNo);
+            }
+            
+            if(!DataHasChanged || dialogChangeSelctedOrder == DialogResult.Yes)
+            {
+                string timeStamp = comboBoxOrders.SelectedItem.ToString();
+
+                foreach (Order order in OrdersLst)
                 {
-                    NewOrderTable(OrdersLst[i]);
+                    if (order.OrderTimestamp.ToString() == timeStamp)
+                    {
+                        NewOrderTable(order);
+                        break;
+                    }
                 }
             }
         }
 
         private void OrderControl_ControlValueChanged(object objSender, EventArgs e)
         {
-            // calculate total sums for the order
-            decimal totalPrice = 0;
-            decimal totalPriceWithDiscount = 0;
-            decimal totalPricePayed = 0;
-            decimal totalTip = 0;
-            
-            foreach (OrderProps orderProps in LastOrder.OrderPropsLst)
+            CalculateStatisticForNerds();
+            CalculateOrderSums();
+            SerializeOrdersXml();
+            DataHasChanged = true;
+        }
+
+        private void ButtonNewOrder_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResultNewOrder = MessageBox.Show("Neue Bestellung anlegen?",
+                "Achtung", MessageBoxButtons.YesNo);
+
+            if (dialogResultNewOrder == DialogResult.Yes)
             {
-                totalPrice += orderProps.Price;
-                totalPriceWithDiscount += orderProps.PriceWithDiscount;
-                totalPricePayed += orderProps.PricePayed;
-                totalTip += orderProps.Tip;
+                Order newOrder = new Order(new List<OrderProps>());
+                OrdersLst.Add(newOrder);
+
+                foreach (OrderProps orderProps in LastOrder.OrderPropsLst)
+                {
+                    OrderProps newOrderProp = new OrderProps(orderProps.CustomerName);
+                    newOrder.OrderPropsLst.Add(newOrderProp);
+                }
+
+                comboBoxOrders.Items.Add(newOrder.OrderTimestamp.ToString());
+                comboBoxOrders.SelectedItem = newOrder.OrderTimestamp.ToString();
             }
+        }
 
-            labelTotalPrice.Text = totalPrice.ToString("N2") + " € ";
-            labelTotalPriceWithDiscount.Text = totalPriceWithDiscount.ToString("N2") + " € ";
-            labelTotalPayed.Text = totalPricePayed.ToString("N2") + " € ";
-            labelTotalTip.Text = totalTip.ToString("N2") + " € ";
+        private void ButtonDeleteOrder_Click(object sender, EventArgs e)
+        {
+            if (OrdersLst.Count > 1)
+            {
+                DialogResult dialogResultDeleteOrder = MessageBox.Show("Durch Löschen der aktuellen" +
+                    " Bestellung gehen alle eingegebene Informationen Verloren. Dies kann sich auch" +
+                    " auf vorhandenen Guthaben auswirken und kann nicht rückgängig gemacht werden." +
+                    " \r\n \r\n" + "Bestellung wirklich löschen und die vorherige Bestellung laden?",
+                    "Achtung", MessageBoxButtons.YesNo);
 
-            // calc statistics for nerds
-            //foreach (Order order in OrdersLst)
-            //{
-            //    foreach (OrderProps orderProps in order.OrderPropsLst)
-            //    {
-                    
-            //    }
-            //}
+                if (dialogResultDeleteOrder == DialogResult.Yes)
+                {
+                    if (OrdersLst.Any())
+                    {
+                        int activeOrderIdx = GetActiveOrderIndex();
+                        OrdersLst.RemoveAt(activeOrderIdx);
+                        SetLastOrder();
+
+                        comboBoxOrders.Items.Remove(comboBoxOrders.SelectedItem);
+                        comboBoxOrders.SelectedIndex = comboBoxOrders.Items.Count - 1;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Löschen nicht möglich - Nur eine verbleibende Bestellung", "Fehler", MessageBoxButtons.OK);
+            }
+        }
+        #endregion
+
+        private void TimerAutoSave_Tick(object sender, EventArgs e)
+        {
+            if (DataHasChanged)
+            {
+                SerializeOrdersXml();
+            }
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
+        {
+            SerializeOrdersXml();
+            DataHasChanged = false;
         }
     }
 }

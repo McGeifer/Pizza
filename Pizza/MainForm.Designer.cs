@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.comboBoxOrders = new System.Windows.Forms.ComboBox();
             this.buttonNewOrder = new System.Windows.Forms.Button();
             this.buttonDeleteOrder = new System.Windows.Forms.Button();
-            this.buttonConfig = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.groupBoxOrderManagement = new System.Windows.Forms.GroupBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -46,15 +47,15 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.labelTotalNumberOfOrders = new System.Windows.Forms.Label();
-            this.labelTotalOrdersSum = new System.Windows.Forms.Label();
+            this.labelTotalOrdersPrice = new System.Windows.Forms.Label();
             this.groupBoxStatistics = new System.Windows.Forms.GroupBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.labelAverageTip = new System.Windows.Forms.Label();
-            this.labelTotalTips = new System.Windows.Forms.Label();
+            this.labelAverageOrdersTip = new System.Windows.Forms.Label();
+            this.labelTotalOrdersTip = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.labelAverageOrdersSum = new System.Windows.Forms.Label();
+            this.labelAverageOrdersPrice = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.panelOrderHead = new System.Windows.Forms.Panel();
             this.label26 = new System.Windows.Forms.Label();
@@ -62,12 +63,13 @@
             this.panelOrderSums = new System.Windows.Forms.Panel();
             this.labelTotalTip = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.labelTotalPayed = new System.Windows.Forms.Label();
+            this.labelTotalPricePayed = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.labelTotalPrice = new System.Windows.Forms.Label();
             this.labelTotalPriceWithDiscount = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
+            this.timerAutoSave = new System.Windows.Forms.Timer(this.components);
             this.groupBoxOrderManagement.SuspendLayout();
             this.groupBoxStatistics.SuspendLayout();
             this.panelOrderHead.SuspendLayout();
@@ -92,30 +94,33 @@
             this.buttonNewOrder.TabIndex = 2;
             this.buttonNewOrder.Text = "Neu";
             this.buttonNewOrder.UseVisualStyleBackColor = true;
+            this.buttonNewOrder.Click += new System.EventHandler(this.ButtonNewOrder_Click);
             // 
             // buttonDeleteOrder
             // 
-            this.buttonDeleteOrder.Location = new System.Drawing.Point(91, 46);
+            this.buttonDeleteOrder.Location = new System.Drawing.Point(171, 46);
             this.buttonDeleteOrder.Name = "buttonDeleteOrder";
             this.buttonDeleteOrder.Size = new System.Drawing.Size(75, 23);
             this.buttonDeleteOrder.TabIndex = 3;
             this.buttonDeleteOrder.Text = "Löschen";
             this.buttonDeleteOrder.UseVisualStyleBackColor = true;
+            this.buttonDeleteOrder.Click += new System.EventHandler(this.ButtonDeleteOrder_Click);
             // 
-            // buttonConfig
+            // buttonSave
             // 
-            this.buttonConfig.Location = new System.Drawing.Point(172, 46);
-            this.buttonConfig.Name = "buttonConfig";
-            this.buttonConfig.Size = new System.Drawing.Size(75, 23);
-            this.buttonConfig.TabIndex = 4;
-            this.buttonConfig.Text = "Optionen";
-            this.buttonConfig.UseVisualStyleBackColor = true;
-            this.buttonConfig.Click += new System.EventHandler(this.ButtonConfig_Click);
+            this.buttonSave.Enabled = false;
+            this.buttonSave.Location = new System.Drawing.Point(91, 46);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 4;
+            this.buttonSave.Text = "Speichern";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
             // groupBoxOrderManagement
             // 
             this.groupBoxOrderManagement.Controls.Add(this.comboBoxOrders);
-            this.groupBoxOrderManagement.Controls.Add(this.buttonConfig);
+            this.groupBoxOrderManagement.Controls.Add(this.buttonSave);
             this.groupBoxOrderManagement.Controls.Add(this.buttonNewOrder);
             this.groupBoxOrderManagement.Controls.Add(this.buttonDeleteOrder);
             this.groupBoxOrderManagement.Location = new System.Drawing.Point(12, 12);
@@ -237,15 +242,15 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(47, 32);
+            this.label12.Location = new System.Drawing.Point(10, 32);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(73, 16);
+            this.label12.Size = new System.Drawing.Size(110, 16);
             this.label12.TabIndex = 7;
-            this.label12.Text = "Bestellwert";
+            this.label12.Text = "Bestellwert (ges.)";
             // 
             // labelTotalNumberOfOrders
             // 
-            this.labelTotalNumberOfOrders.Location = new System.Drawing.Point(126, 18);
+            this.labelTotalNumberOfOrders.Location = new System.Drawing.Point(141, 18);
             this.labelTotalNumberOfOrders.Name = "labelTotalNumberOfOrders";
             this.labelTotalNumberOfOrders.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelTotalNumberOfOrders.Size = new System.Drawing.Size(34, 16);
@@ -253,26 +258,26 @@
             this.labelTotalNumberOfOrders.Text = "8888";
             this.labelTotalNumberOfOrders.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // labelTotalOrdersSum
+            // labelTotalOrdersPrice
             // 
-            this.labelTotalOrdersSum.Location = new System.Drawing.Point(126, 34);
-            this.labelTotalOrdersSum.Name = "labelTotalOrdersSum";
-            this.labelTotalOrdersSum.Size = new System.Drawing.Size(58, 16);
-            this.labelTotalOrdersSum.TabIndex = 9;
-            this.labelTotalOrdersSum.Text = "8888,88 €";
-            this.labelTotalOrdersSum.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelTotalOrdersPrice.Location = new System.Drawing.Point(126, 34);
+            this.labelTotalOrdersPrice.Name = "labelTotalOrdersPrice";
+            this.labelTotalOrdersPrice.Size = new System.Drawing.Size(58, 16);
+            this.labelTotalOrdersPrice.TabIndex = 9;
+            this.labelTotalOrdersPrice.Text = "8888,88 €";
+            this.labelTotalOrdersPrice.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // groupBoxStatistics
             // 
             this.groupBoxStatistics.Controls.Add(this.label17);
-            this.groupBoxStatistics.Controls.Add(this.labelAverageTip);
-            this.groupBoxStatistics.Controls.Add(this.labelTotalTips);
+            this.groupBoxStatistics.Controls.Add(this.labelAverageOrdersTip);
+            this.groupBoxStatistics.Controls.Add(this.labelTotalOrdersTip);
             this.groupBoxStatistics.Controls.Add(this.label16);
             this.groupBoxStatistics.Controls.Add(this.label15);
             this.groupBoxStatistics.Controls.Add(this.label14);
-            this.groupBoxStatistics.Controls.Add(this.labelAverageOrdersSum);
+            this.groupBoxStatistics.Controls.Add(this.labelAverageOrdersPrice);
             this.groupBoxStatistics.Controls.Add(this.label13);
-            this.groupBoxStatistics.Controls.Add(this.labelTotalOrdersSum);
+            this.groupBoxStatistics.Controls.Add(this.labelTotalOrdersPrice);
             this.groupBoxStatistics.Controls.Add(this.label11);
             this.groupBoxStatistics.Controls.Add(this.labelTotalNumberOfOrders);
             this.groupBoxStatistics.Controls.Add(this.label12);
@@ -286,35 +291,35 @@
             // label17
             // 
             this.label17.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label17.Location = new System.Drawing.Point(354, 16);
+            this.label17.Location = new System.Drawing.Point(366, 16);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(2, 50);
             this.label17.TabIndex = 17;
             this.label17.Text = "label17";
             // 
-            // labelAverageTip
+            // labelAverageOrdersTip
             // 
-            this.labelAverageTip.Location = new System.Drawing.Point(290, 50);
-            this.labelAverageTip.Name = "labelAverageTip";
-            this.labelAverageTip.Size = new System.Drawing.Size(58, 16);
-            this.labelAverageTip.TabIndex = 16;
-            this.labelAverageTip.Text = "8888,88 €";
-            this.labelAverageTip.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelAverageOrdersTip.Location = new System.Drawing.Point(302, 50);
+            this.labelAverageOrdersTip.Name = "labelAverageOrdersTip";
+            this.labelAverageOrdersTip.Size = new System.Drawing.Size(58, 16);
+            this.labelAverageOrdersTip.TabIndex = 16;
+            this.labelAverageOrdersTip.Text = "8888,88 €";
+            this.labelAverageOrdersTip.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // labelTotalTips
+            // labelTotalOrdersTip
             // 
-            this.labelTotalTips.Location = new System.Drawing.Point(290, 34);
-            this.labelTotalTips.Name = "labelTotalTips";
-            this.labelTotalTips.Size = new System.Drawing.Size(58, 16);
-            this.labelTotalTips.TabIndex = 15;
-            this.labelTotalTips.Text = "8888,88 €";
-            this.labelTotalTips.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelTotalOrdersTip.Location = new System.Drawing.Point(302, 34);
+            this.labelTotalOrdersTip.Name = "labelTotalOrdersTip";
+            this.labelTotalOrdersTip.Size = new System.Drawing.Size(58, 16);
+            this.labelTotalOrdersTip.TabIndex = 15;
+            this.labelTotalOrdersTip.Text = "8888,88 €";
+            this.labelTotalOrdersTip.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(198, 48);
+            this.label16.Location = new System.Drawing.Point(210, 48);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(86, 16);
             this.label16.TabIndex = 14;
@@ -324,11 +329,11 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(219, 32);
+            this.label15.Location = new System.Drawing.Point(194, 32);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 16);
+            this.label15.Size = new System.Drawing.Size(102, 16);
             this.label15.TabIndex = 13;
-            this.label15.Text = "Trinkgeld";
+            this.label15.Text = "Trinkgeld (ges.)";
             // 
             // label14
             // 
@@ -339,14 +344,14 @@
             this.label14.TabIndex = 12;
             this.label14.Text = "label14";
             // 
-            // labelAverageOrdersSum
+            // labelAverageOrdersPrice
             // 
-            this.labelAverageOrdersSum.Location = new System.Drawing.Point(126, 50);
-            this.labelAverageOrdersSum.Name = "labelAverageOrdersSum";
-            this.labelAverageOrdersSum.Size = new System.Drawing.Size(58, 13);
-            this.labelAverageOrdersSum.TabIndex = 11;
-            this.labelAverageOrdersSum.Text = "8888,88 €";
-            this.labelAverageOrdersSum.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelAverageOrdersPrice.Location = new System.Drawing.Point(126, 50);
+            this.labelAverageOrdersPrice.Name = "labelAverageOrdersPrice";
+            this.labelAverageOrdersPrice.Size = new System.Drawing.Size(58, 13);
+            this.labelAverageOrdersPrice.TabIndex = 11;
+            this.labelAverageOrdersPrice.Text = "8888,88 €";
+            this.labelAverageOrdersPrice.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label13
             // 
@@ -408,7 +413,7 @@
             this.panelOrderSums.BackColor = System.Drawing.SystemColors.Control;
             this.panelOrderSums.Controls.Add(this.labelTotalTip);
             this.panelOrderSums.Controls.Add(this.label21);
-            this.panelOrderSums.Controls.Add(this.labelTotalPayed);
+            this.panelOrderSums.Controls.Add(this.labelTotalPricePayed);
             this.panelOrderSums.Controls.Add(this.label20);
             this.panelOrderSums.Controls.Add(this.labelTotalPrice);
             this.panelOrderSums.Controls.Add(this.labelTotalPriceWithDiscount);
@@ -422,9 +427,8 @@
             // 
             // labelTotalTip
             // 
-            this.labelTotalTip.AutoSize = true;
             this.labelTotalTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTotalTip.Location = new System.Drawing.Point(837, 27);
+            this.labelTotalTip.Location = new System.Drawing.Point(835, 27);
             this.labelTotalTip.Name = "labelTotalTip";
             this.labelTotalTip.Size = new System.Drawing.Size(71, 20);
             this.labelTotalTip.TabIndex = 19;
@@ -441,16 +445,15 @@
             this.label21.TabIndex = 13;
             this.label21.Text = "Gesamt";
             // 
-            // labelTotalPayed
+            // labelTotalPricePayed
             // 
-            this.labelTotalPayed.AutoSize = true;
-            this.labelTotalPayed.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTotalPayed.Location = new System.Drawing.Point(683, 27);
-            this.labelTotalPayed.Name = "labelTotalPayed";
-            this.labelTotalPayed.Size = new System.Drawing.Size(71, 20);
-            this.labelTotalPayed.TabIndex = 16;
-            this.labelTotalPayed.Text = "999,99 €";
-            this.labelTotalPayed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelTotalPricePayed.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTotalPricePayed.Location = new System.Drawing.Point(682, 27);
+            this.labelTotalPricePayed.Name = "labelTotalPricePayed";
+            this.labelTotalPricePayed.Size = new System.Drawing.Size(71, 20);
+            this.labelTotalPricePayed.TabIndex = 16;
+            this.labelTotalPricePayed.Text = "999,99 €";
+            this.labelTotalPricePayed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label20
             // 
@@ -462,7 +465,6 @@
             // 
             // labelTotalPrice
             // 
-            this.labelTotalPrice.AutoSize = true;
             this.labelTotalPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTotalPrice.Location = new System.Drawing.Point(400, 27);
             this.labelTotalPrice.Name = "labelTotalPrice";
@@ -473,9 +475,8 @@
             // 
             // labelTotalPriceWithDiscount
             // 
-            this.labelTotalPriceWithDiscount.AutoSize = true;
             this.labelTotalPriceWithDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTotalPriceWithDiscount.Location = new System.Drawing.Point(613, 27);
+            this.labelTotalPriceWithDiscount.Location = new System.Drawing.Point(608, 27);
             this.labelTotalPriceWithDiscount.Name = "labelTotalPriceWithDiscount";
             this.labelTotalPriceWithDiscount.Size = new System.Drawing.Size(71, 20);
             this.labelTotalPriceWithDiscount.TabIndex = 14;
@@ -499,6 +500,12 @@
             this.label28.Size = new System.Drawing.Size(0, 20);
             this.label28.TabIndex = 18;
             this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // timerAutoSave
+            // 
+            this.timerAutoSave.Enabled = true;
+            this.timerAutoSave.Interval = 600000;
+            this.timerAutoSave.Tick += new System.EventHandler(this.TimerAutoSave_Tick);
             // 
             // MainForm
             // 
@@ -533,7 +540,7 @@
         private System.Windows.Forms.ComboBox comboBoxOrders;
         private System.Windows.Forms.Button buttonNewOrder;
         private System.Windows.Forms.Button buttonDeleteOrder;
-        private System.Windows.Forms.Button buttonConfig;
+        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.GroupBox groupBoxOrderManagement;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
@@ -544,17 +551,17 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label labelTotalOrdersSum;
+        private System.Windows.Forms.Label labelTotalOrdersPrice;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label labelTotalNumberOfOrders;
         private System.Windows.Forms.GroupBox groupBoxStatistics;
-        private System.Windows.Forms.Label labelAverageOrdersSum;
+        private System.Windows.Forms.Label labelAverageOrdersPrice;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label labelAverageTip;
-        private System.Windows.Forms.Label labelTotalTips;
+        private System.Windows.Forms.Label labelAverageOrdersTip;
+        private System.Windows.Forms.Label labelTotalOrdersTip;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label18;
@@ -565,11 +572,12 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label labelTotalTip;
-        private System.Windows.Forms.Label labelTotalPayed;
+        private System.Windows.Forms.Label labelTotalPricePayed;
         private System.Windows.Forms.Label labelTotalPrice;
         private System.Windows.Forms.Label labelTotalPriceWithDiscount;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Timer timerAutoSave;
     }
 }
 

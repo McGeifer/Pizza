@@ -37,68 +37,24 @@ namespace Pizza
         {
             InitializeComponent();
             OrderProps = orderProps;
-            OrderProps.ControlValueChanged += OrderProps_ControlValueChanged;
             
             this.labelCustomerName.Text = orderProps.CustomerName;
+            this.textBoxArticle.Text = orderProps.Articles;
+            this.textBoxPrice.Text = orderProps.Price.ToString("N2") + " € ";
+            this.textBoxDiscount.Text = orderProps.Discount.ToString("N2") + " € ";
+            this.labelCredit.Text = orderProps.Credit.ToString("N2") + " € ";
+            this.labelPriceWithDiscount.Text = orderProps.PriceWithDiscount.ToString("N2") + " € ";
+            this.textBoxPricePayed.Text = orderProps.PricePayed.ToString("N2") + " € ";
+            this.labelChange.Text = orderProps.Change.ToString("N2") + " € ";
+            this.textBoxTip.Text = orderProps.Tip.ToString("N2") + " € ";
+            this.checkBoxOrder.Checked = orderProps.Ordered;
+
+            OrderProps.ControlValueChanged += OrderProps_ControlValueChanged;
         }
 
         #endregion
 
         #region methods
-
-        // Is the key pressed a decimal or comma character?
-        private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
-            {
-                return true;
-            } 
-            else
-            {
-                return false;
-            }
-        }
-
-        // Allow only one decimal point for the text box.
-        private bool AllowOnlyOneComma(object sender, KeyPressEventArgs e)
-        {
-            if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        // Add a currency sign (€) to the end of the text box/ label if it doesn't already exists.
-        private void TextBoxAddCurrencySign(TextBox t)
-        {
-            if (!t.Text.Contains("€") && (!String.IsNullOrEmpty(t.Text) || !String.IsNullOrWhiteSpace(t.Text)))
-            {
-                t.Text = t.Text + " € ";
-            }
-        }
-        private void LabelAddCurrencySign(Label l)
-        {
-            if (!l.Text.Contains("€") && (!String.IsNullOrEmpty(l.Text) || !String.IsNullOrWhiteSpace(l.Text)))
-            {
-                l.Text = l.Text + " € ";
-            }
-        }
-
-        private bool TextBoxInputConfirmed(KeyPressEventArgs e)
-        {
-            if (e.KeyChar == Convert.ToChar(Keys.Enter) || e.KeyChar == Convert.ToChar(Keys.Return))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
         private void DisableCustomerControl()
         {
@@ -164,10 +120,64 @@ namespace Pizza
             }
         }
 
+        // Add a currency sign (€) to the end of the text box/ label if it doesn't already exists.
+        private void TextBoxAddCurrencySign(TextBox t)
+        {
+            if (!t.Text.Contains("€") && (!String.IsNullOrEmpty(t.Text) || !String.IsNullOrWhiteSpace(t.Text)))
+            {
+                t.Text = t.Text + " € ";
+            }
+        }
+        private void LabelAddCurrencySign(Label l)
+        {
+            if (!l.Text.Contains("€") && (!String.IsNullOrEmpty(l.Text) || !String.IsNullOrWhiteSpace(l.Text)))
+            {
+                l.Text = l.Text + " € ";
+            }
+        }
+
         #endregion
 
         #region event handler
 
+        // Is the key pressed a decimal or comma character?
+        private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // Allow only one decimal point for the text box.
+        private bool AllowOnlyOneComma(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool TextBoxInputConfirmed(KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(Keys.Enter) || e.KeyChar == Convert.ToChar(Keys.Return))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
         // 
         //  TextBox Article
         //
@@ -469,6 +479,7 @@ namespace Pizza
                     break;
             }
         }
+
         #endregion
     }
 }

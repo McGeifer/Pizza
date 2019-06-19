@@ -80,6 +80,7 @@
             // 
             this.textBoxPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxPrice.Location = new System.Drawing.Point(407, 7);
+            this.textBoxPrice.MaxLength = 5;
             this.textBoxPrice.Name = "textBoxPrice";
             this.textBoxPrice.Size = new System.Drawing.Size(65, 26);
             this.textBoxPrice.TabIndex = 2;
@@ -94,6 +95,7 @@
             // 
             this.textBoxDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxDiscount.Location = new System.Drawing.Point(478, 7);
+            this.textBoxDiscount.MaxLength = 5;
             this.textBoxDiscount.Name = "textBoxDiscount";
             this.textBoxDiscount.Size = new System.Drawing.Size(65, 26);
             this.textBoxDiscount.TabIndex = 3;
@@ -119,6 +121,7 @@
             // 
             this.textBoxPricePayed.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxPricePayed.Location = new System.Drawing.Point(689, 7);
+            this.textBoxPricePayed.MaxLength = 5;
             this.textBoxPricePayed.Name = "textBoxPricePayed";
             this.textBoxPricePayed.Size = new System.Drawing.Size(65, 26);
             this.textBoxPricePayed.TabIndex = 4;
@@ -144,6 +147,7 @@
             // 
             this.textBoxTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxTip.Location = new System.Drawing.Point(843, 7);
+            this.textBoxTip.MaxLength = 5;
             this.textBoxTip.Name = "textBoxTip";
             this.textBoxTip.Size = new System.Drawing.Size(65, 26);
             this.textBoxTip.TabIndex = 5;

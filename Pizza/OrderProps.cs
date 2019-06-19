@@ -8,22 +8,12 @@ namespace Pizza
 {
     public class Order
     {
+        #region Properties   
+
         private List<OrderProps> _orderPropsLst;
         private string _orderTitle;
         private DateTime _orderTimestamp;
         private bool _orderClosed;
-
-        public Order()
-        {
-            OrderPropsLst = new List<OrderProps>();
-            OrderTimestamp = DateTime.Now;
-        }
-
-        public Order(List<OrderProps> tmp)
-        {
-            OrderPropsLst = tmp;
-            OrderTimestamp = DateTime.Now;
-        }
 
         public List<OrderProps> OrderPropsLst
         {
@@ -48,10 +38,30 @@ namespace Pizza
             get => _orderClosed;
             set => _orderClosed = value;
         }
+
+        #endregion
+
+        #region Constructors
+
+        public Order()
+        {
+            OrderPropsLst = new List<OrderProps>();
+            OrderTimestamp = DateTime.Now;
+        }
+
+        public Order(List<OrderProps> tmp)
+        {
+            OrderPropsLst = tmp;
+            OrderTimestamp = DateTime.Now;
+        }
+
+        #endregion
     }
 
     public class OrderProps
     {
+        #region Properties
+    
         private string _customerName;
         private string _articles;
         private decimal _price;
@@ -62,29 +72,6 @@ namespace Pizza
         private decimal _change;
         private decimal _tip;
         private bool _ordered;
-
-        public event EventHandler ControlValueChanged;
-
-        protected virtual void OnControlValueChanged(EventArgs e, string propertyName)
-        {
-            EventHandler controlValueChanged = ControlValueChanged;
-
-            if (controlValueChanged != null)
-            {
-                controlValueChanged(propertyName, e);
-            }
-        }
-
-        public OrderProps()
-        {
-
-        }
-
-        public OrderProps(string customerName, string articles)
-        {
-            this.CustomerName = customerName;
-            this.Articles = articles;
-        }
 
         public string CustomerName
         {
@@ -271,5 +258,37 @@ namespace Pizza
                 OnControlValueChanged(EventArgs.Empty, "PriceWithDiscount");
             }
         }
+
+        #endregion
+
+        #region Constructors
+
+        public OrderProps()
+        {
+
+        }
+
+        public OrderProps(string customerName)
+        {
+            this.CustomerName = customerName;
+        }
+
+        #endregion
+
+        #region EventHandler
+
+        public event EventHandler ControlValueChanged;
+
+        protected virtual void OnControlValueChanged(EventArgs e, string propertyName)
+        {
+            EventHandler controlValueChanged = ControlValueChanged;
+
+            if (controlValueChanged != null)
+            {
+                controlValueChanged(propertyName, e);
+            }
+        }
+
+        #endregion
     }
 }
