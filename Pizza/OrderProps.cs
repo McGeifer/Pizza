@@ -73,6 +73,8 @@ namespace Pizza
         private decimal _tip;
         private bool _ordered;
 
+        public event EventHandler ControlValueChanged;
+
         public string CustomerName
         {
             get
@@ -276,8 +278,6 @@ namespace Pizza
         #endregion
 
         #region EventHandler
-
-        public event EventHandler ControlValueChanged;
 
         protected virtual void OnControlValueChanged(EventArgs e, string propertyName)
         {

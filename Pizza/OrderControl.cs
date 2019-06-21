@@ -17,8 +17,9 @@ namespace Pizza
 
         private OrderProps _orderProps;
         public event EventHandler OrderControlChanged;
+        public event EventHandler OrderControlToBeRemoved;
 
-        private OrderProps OrderProps
+        public OrderProps OrderProps
         {
             get => _orderProps;
             set => _orderProps = value;
@@ -31,11 +32,13 @@ namespace Pizza
         public OrderControl()
         {
             InitializeComponent();
+            //AddContextMenu();
         }
 
         public OrderControl(OrderProps orderProps)
         {
             InitializeComponent();
+            //AddContextMenu();
             OrderProps = orderProps;
             
             this.labelCustomerName.Text = orderProps.CustomerName;
@@ -55,6 +58,13 @@ namespace Pizza
         #endregion
 
         #region methods
+
+        private void AddContextMenu()
+        {
+            ContextMenu orderControlContextMenu = new ContextMenu();
+            orderControlContextMenu.MenuItems.Add("Besteller entfernen");
+            this.ContextMenu = orderControlContextMenu;
+        }
 
         private void DisableCustomerControl()
         {
@@ -423,6 +433,11 @@ namespace Pizza
             }
         }
 
+        private void ToolStripMenuItemDeleteCustomer_Click(object sender, EventArgs e)
+        {
+            OnControlToBeRemoved(this, EventArgs.Empty);
+        }
+
         // Update the text boxes and labels of the order control with their corresponding Properties if they've been changed.
         // This will guarantee consistent data between the shown value in the UI elements and the stored Property.
         private void OrderProps_ControlValueChanged(object objSender, EventArgs e)
@@ -477,6 +492,16 @@ namespace Pizza
 
                 default:
                     break;
+            }
+        }
+
+        protected virtual void OnControlToBeRemoved(OrderControl orderCrtl, EventArgs e)
+        {
+            EventHandler orderControlToBeRemoved = OrderControlToBeRemoved;
+
+            if (orderControlToBeRemoved != null)
+            {
+                orderControlToBeRemoved(orderCrtl, e);
             }
         }
 

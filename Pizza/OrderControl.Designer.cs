@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.labelCustomerName = new System.Windows.Forms.Label();
+            this.contextMenuStripDeleteCustomer = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemDeleteCustomer = new System.Windows.Forms.ToolStripMenuItem();
             this.textBoxArticle = new System.Windows.Forms.TextBox();
             this.checkBoxOrder = new System.Windows.Forms.CheckBox();
             this.textBoxPrice = new System.Windows.Forms.TextBox();
@@ -38,11 +41,13 @@
             this.labelChange = new System.Windows.Forms.Label();
             this.textBoxTip = new System.Windows.Forms.TextBox();
             this.labelCredit = new System.Windows.Forms.Label();
+            this.contextMenuStripDeleteCustomer.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelCustomerName
             // 
             this.labelCustomerName.AutoSize = true;
+            this.labelCustomerName.ContextMenuStrip = this.contextMenuStripDeleteCustomer;
             this.labelCustomerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCustomerName.Location = new System.Drawing.Point(4, 10);
             this.labelCustomerName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -50,6 +55,23 @@
             this.labelCustomerName.Size = new System.Drawing.Size(93, 20);
             this.labelCustomerName.TabIndex = 0;
             this.labelCustomerName.Text = "Besteller 99";
+            // 
+            // contextMenuStripDeleteCustomer
+            // 
+            this.contextMenuStripDeleteCustomer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemDeleteCustomer});
+            this.contextMenuStripDeleteCustomer.Name = "contextMenuStripDeleteCustomer";
+            this.contextMenuStripDeleteCustomer.ShowImageMargin = false;
+            this.contextMenuStripDeleteCustomer.ShowItemToolTips = false;
+            this.contextMenuStripDeleteCustomer.Size = new System.Drawing.Size(156, 48);
+            this.contextMenuStripDeleteCustomer.Text = "Besteller entfernen";
+            // 
+            // toolStripMenuItemDeleteCustomer
+            // 
+            this.toolStripMenuItemDeleteCustomer.Name = "toolStripMenuItemDeleteCustomer";
+            this.toolStripMenuItemDeleteCustomer.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemDeleteCustomer.Text = "Besteller entfernen";
+            this.toolStripMenuItemDeleteCustomer.Click += new System.EventHandler(this.ToolStripMenuItemDeleteCustomer_Click);
             // 
             // textBoxArticle
             // 
@@ -189,6 +211,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "OrderControl";
             this.Size = new System.Drawing.Size(975, 41);
+            this.contextMenuStripDeleteCustomer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -206,5 +229,7 @@
         private System.Windows.Forms.Label labelChange;
         private System.Windows.Forms.TextBox textBoxTip;
         private System.Windows.Forms.Label labelCredit;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripDeleteCustomer;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeleteCustomer;
     }
 }

@@ -85,7 +85,7 @@ namespace Pizza
             fileStream = new FileStream(XmlFilePath, FileMode.Create);
             serializer.Serialize(fileStream, OrdersLst);
             fileStream.Close();
-
+            DataHasChanged = false;
         }
 
         void DeserializeOrdersXml()
@@ -223,14 +223,6 @@ namespace Pizza
             comboBoxOrders.SelectedIndexChanged += ComboBoxOrders_SelectedIndexChanged;
         }
 
-        // Generate a new table by using the customers of the last order.
-        void InitOrderTable()
-        {
-            NewOrderTable(LastOrder);
-            CalculateStatisticForNerds();
-            CalculateOrderSums();
-        }
-
         // Create a new order table with a given order.
         void NewOrderTable(Order order)
         {
@@ -246,9 +238,20 @@ namespace Pizza
                 {
                     OrderControl orderControl = new OrderControl(orderProps);
                     OrderCrtlLst.Add(orderControl);
+                }
+
+                // Sort list by CustomerName
+                OrderCrtlLst.Sort((x, y) => x.OrderProps.CustomerName.CompareTo(y.OrderProps.CustomerName));
+
+                var i = 0;
+
+                foreach (OrderControl orderControl in OrderCrtlLst)
+                {
                     panelOrder.Controls.Add(orderControl);
-                    orderControl.Location = new Point(1, OrderCrtlLst.Count == 1 ? 0 : (OrderCrtlLst.Count - 1) * orderControl.Height);
+                    orderControl.Location = new Point(1, i == 0 ? 0 : i * orderControl.Height);
                     orderControl.OrderControlChanged += new EventHandler(OrderControl_ControlValueChanged);
+                    orderControl.OrderControlToBeRemoved += new EventHandler(OrderControl_ControlToBeRemoved);
+                    i++;
                 }
 
                 // Disable all controls if an order has been submitted.
@@ -260,13 +263,17 @@ namespace Pizza
                     }
                 }
 
-                // re-enable MainForm layout logic.
+                // Re-enable MainForm layout logic.
                 this.ResumeLayout();
 
                 // Resize and position MainForm
                 this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height
                     + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
                 this.CenterToScreen();
+
+                // Update all calculations
+                CalculateStatisticForNerds();
+                CalculateOrderSums();
             }
         }
 
@@ -277,6 +284,7 @@ namespace Pizza
             {
                 panelOrder.Controls.Remove(OrderCrtlLst[0]);
                 OrderCrtlLst[0].OrderControlChanged -= OrderControl_ControlValueChanged;
+                OrderCrtlLst[0].OrderControlToBeRemoved -= OrderControl_ControlToBeRemoved;
                 OrderCrtlLst[0].Dispose();
                 OrderCrtlLst.Remove(OrderCrtlLst[0]);
             }
@@ -418,7 +426,7 @@ namespace Pizza
             // Initialize data structures and populate the order table and MainForm.
             DeserializeOrdersXml();
             InitComboBoxOrders();
-            InitOrderTable();
+            NewOrderTable(LastOrder);
         }
 
         private void ButtonConfig_Click(object sender, EventArgs e)
@@ -461,6 +469,34 @@ namespace Pizza
             DataHasChanged = true;
         }
 
+        private void OrderControl_ControlToBeRemoved(object sender, EventArgs e)
+        {
+            var activeOrderIdx = GetActiveOrderIndex();
+
+            if (activeOrderIdx == (OrdersLst.Count - 1))
+            {
+                DialogResult dialogResultDeleteCustomer = MessageBox.Show("Besteller wirklich" +
+                    " entfernen? Vorhandenes Guthaben wird unwiderruflich gelöscht.", "Warnung",
+                    MessageBoxButtons.YesNo);
+
+                if (dialogResultDeleteCustomer == DialogResult.Yes)
+                {
+                    OrderControl orderControl = sender as OrderControl;
+                    OrdersLst[activeOrderIdx].OrderPropsLst.Remove(orderControl.OrderProps);
+                    NewOrderTable(OrdersLst[activeOrderIdx]);
+                    CalculateStatisticForNerds();
+                    CalculateOrderSums();
+                    //SerializeOrdersXml();
+                    //DataHasChanged = true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Besteller können nur aus der aktuellen Bestellung entfernt" +
+                " werden.", "Fehler", MessageBoxButtons.OK);
+            }
+        }
+
         private void ButtonNewOrder_Click(object sender, EventArgs e)
         {
             DialogResult dialogResultNewOrder = MessageBox.Show("Neue Bestellung anlegen?",
@@ -479,6 +515,11 @@ namespace Pizza
 
                 comboBoxOrders.Items.Add(newOrder.OrderTimestamp.ToString());
                 comboBoxOrders.SelectedItem = newOrder.OrderTimestamp.ToString();
+
+                if (this.buttonDeleteOrder.Enabled == false && OrdersLst.Count > 1)
+                {
+                    this.buttonDeleteOrder.Enabled = true;
+                }
             }
         }
 
@@ -494,21 +535,22 @@ namespace Pizza
 
                 if (dialogResultDeleteOrder == DialogResult.Yes)
                 {
-                    if (OrdersLst.Any())
-                    {
-                        int activeOrderIdx = GetActiveOrderIndex();
-                        OrdersLst.RemoveAt(activeOrderIdx);
-                        SetLastOrder();
+                    OrdersLst.RemoveAt(GetActiveOrderIndex());
+                    SetLastOrder();
 
-                        comboBoxOrders.Items.Remove(comboBoxOrders.SelectedItem);
-                        comboBoxOrders.SelectedIndex = comboBoxOrders.Items.Count - 1;
+                    comboBoxOrders.Items.Remove(comboBoxOrders.SelectedItem);
+                    comboBoxOrders.SelectedIndex = comboBoxOrders.Items.Count - 1;
+
+                    if (OrdersLst.Count <= 1)
+                    {
+                        this.buttonDeleteOrder.Enabled = false;
                     }
                 }
             }
-            else
-            {
-                MessageBox.Show("Löschen nicht möglich - Nur eine verbleibende Bestellung", "Fehler", MessageBoxButtons.OK);
-            }
+            //else
+            //{
+            //    MessageBox.Show("Löschen nicht möglich - Nur eine verbleibende Bestellung", "Fehler", MessageBoxButtons.OK);
+            //}
         }
         #endregion
 
@@ -523,7 +565,7 @@ namespace Pizza
         private void ButtonSave_Click(object sender, EventArgs e)
         {
             SerializeOrdersXml();
-            DataHasChanged = false;
+            this.Focus();
         }
     }
 }
