@@ -22,6 +22,7 @@ namespace Pizza
         private Order _lastOrder = new Order();
         private List<OrderControl> _orderCrtlLst = new List<OrderControl>();
         private bool _dataHasChanged = false;
+        private bool _firstStart = true;       
 
         private List<Order> OrdersLst
         {
@@ -57,6 +58,12 @@ namespace Pizza
 
                 _dataHasChanged = value;
             }
+        }
+
+        public bool FirstStart
+        {
+            get => _firstStart;
+            set => _firstStart = value;
         }
 
         #endregion
@@ -131,7 +138,7 @@ namespace Pizza
                 else
                 {
                     // Generate a new XML file?
-                    dialogNewXmlFile = MessageBox.Show("Soll eine neu Datei für Bestelldaten erzeugt werden?"
+                    dialogNewXmlFile = MessageBox.Show("Soll eine neue Datei für Bestelldaten erzeugt werden?"
                         + Environment.NewLine + Environment.NewLine + "Nein - beendet das Programm",
                         "Warnung", MessageBoxButtons.YesNo);
 
@@ -139,6 +146,11 @@ namespace Pizza
                     {
                         Application.Exit();
                         return;
+                    }
+                    else
+                    {
+                        OrdersLst.Add(new Order());
+                        SetLastOrder();
                     }
                 }
             }
@@ -226,12 +238,14 @@ namespace Pizza
         // Create a new order table with a given order.
         void NewOrderTable(Order order)
         {
+            var i = 0;
+            var oldOrderCrtlCnt = 0;
+
             if (order.OrderPropsLst.Any())
             {
                 // Disable MainForm layout logic while changing controls for better visuals.
                 this.SuspendLayout();
-
-                CleanOrderPanel();
+                oldOrderCrtlCnt = CleanOrderPanel();
 
                 // Add new control for each customer of the last order
                 foreach (OrderProps orderProps in order.OrderPropsLst)
@@ -243,77 +257,112 @@ namespace Pizza
                 // Sort list by CustomerName
                 OrderCrtlLst.Sort((x, y) => x.OrderProps.CustomerName.CompareTo(y.OrderProps.CustomerName));
 
-                var i = 0;
-
                 foreach (OrderControl orderControl in OrderCrtlLst)
                 {
                     panelOrder.Controls.Add(orderControl);
                     orderControl.Location = new Point(1, i == 0 ? 0 : i * orderControl.Height);
-                    orderControl.OrderControlChanged += new EventHandler(OrderControl_ControlValueChanged);
-                    orderControl.OrderControlToBeRemoved += new EventHandler(OrderControl_ControlToBeRemoved);
+                    orderControl.OrderControlChanged += OrderControl_ControlValueChanged;
+                    orderControl.OrderControlToBeRemoved += OrderControl_ControlToBeRemoved;
+                    orderControl.OrderControlOrderClosed += OrderControl_OrderControlOrderClosed;
+                    orderControl.CalcControlSums();
                     i++;
                 }
-
-                // Disable all controls if an order has been submitted.
-                if (order.OrderClosed)
-                {
-                    foreach (OrderControl orderControl in OrderCrtlLst)
-                    {
-                        orderControl.Enabled = false;
-                    }
-                }
-
-                // Re-enable MainForm layout logic.
-                this.ResumeLayout();
-
-                // Resize and position MainForm
-                this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height
-                    + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
-                this.CenterToScreen();
-
-                // Update all calculations
-                CalculateStatisticForNerds();
-                CalculateOrderSums();
             }
+
+            // Add special customerControl for adding a new customer
+            OrderControl orderControlNewCustomer = new OrderControl("NewCustomer");
+            OrderCrtlLst.Add(orderControlNewCustomer);
+            panelOrder.Controls.Add(orderControlNewCustomer);
+            orderControlNewCustomer.Location = new Point(1, i == 0 ? 0 : i * orderControlNewCustomer.Height);
+            orderControlNewCustomer.OrderControlNewCustomer += OrderControl_OrderControlNewCustomer;
+
+            // Disable control(s) if an order has been submitted (not the last one which is the special
+            // control for adding a new customer) or there is no article to order.
+            bool[] tmp = new bool[OrderCrtlLst.Count - 1];
+
+            for (int j = 0; j < OrderCrtlLst.Count - 1; j ++)
+            {
+                if (OrderCrtlLst[j].OrderProps.Articles.Equals(string.Empty) || OrderCrtlLst[j].OrderProps.Ordered)
+                {
+                    OrderCrtlLst[j].OrderControlDisable();
+                    tmp[j] = true;
+                }    
+            }
+
+            // order has been submitted
+            if (OrdersLst[GetActiveOrderIndex()].OrderClosed)
+            {
+                OrderCrtlLst.Last().Enabled = false;
+                buttonCloseOrder.Enabled = false;
+
+                foreach (OrderControl orderControl in OrderCrtlLst)
+                {
+                    orderControl.Enabled = false;
+                }
+            }
+            else
+            {
+                if (tmp.All(x => x))
+                {
+                    buttonCloseOrder.Enabled = true;
+                }
+                else
+                {
+                    buttonCloseOrder.Enabled = false;
+                }
+            }
+
+            // Disable close order button if it's a new blank order without any customers
+            if (OrderCrtlLst.Count() <2)
+            {
+                buttonCloseOrder.Enabled = false;
+            }
+
+            // Re-enable MainForm layout logic.
+            this.ResumeLayout();
+
+            // Resize and position MainForm
+            this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height
+                + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
+            
+            if (oldOrderCrtlCnt < i)
+            {
+                this.CenterToScreen();
+            }
+
+            CalculateStatisticForNerds();
+            CalculateOrderSums();
+            SerializeOrdersXml();
         }
 
         // Remove all controls from the panel an the OrderCrtlLst.
-        private void CleanOrderPanel()
+        private int CleanOrderPanel()
         {
+            int i = 0;
+            
             while (OrderCrtlLst.Count > 0)
             {
                 panelOrder.Controls.Remove(OrderCrtlLst[0]);
                 OrderCrtlLst[0].OrderControlChanged -= OrderControl_ControlValueChanged;
                 OrderCrtlLst[0].OrderControlToBeRemoved -= OrderControl_ControlToBeRemoved;
+                OrderCrtlLst[0].OrderControlNewCustomer -= OrderControl_OrderControlNewCustomer;
                 OrderCrtlLst[0].Dispose();
                 OrderCrtlLst.Remove(OrderCrtlLst[0]);
+                i++;
             }
+            return i;
         }
 
         private void NewCustomer(string newCustomerName)
         {
-            OrderProps orderProps = new OrderProps(newCustomerName);
-            OrderControl orderControl = new OrderControl(orderProps);
+            OrderProps newOrderProps = new OrderProps(newCustomerName);
+            OrderControl newOrderControl = new OrderControl(newOrderProps);
 
             // Add new customer to active order data structure
-            OrdersLst[GetActiveOrderIndex()].OrderPropsLst.Add(orderProps);
-        
-            // Disable MainForm layout logic while adding control for better visuals.
-            this.SuspendLayout();
+            OrdersLst[GetActiveOrderIndex()].OrderPropsLst.Add(newOrderProps);
 
-            // Add new customer control to OrderCrtl list and to the proper panel
-            OrderCrtlLst.Add(orderControl);
-            panelOrder.Controls.Add(orderControl);
-            orderControl.Location = new Point(1, OrderCrtlLst.Count == 1 ? 0 : (OrderCrtlLst.Count - 1) * orderControl.Height);
-            orderControl.OrderControlChanged += new EventHandler(OrderControl_ControlValueChanged);
-
-            // re-enable MainForm layout logic.
-            this.ResumeLayout();
-
-            // Resize and position MainForm
-            this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height +
-                panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
-            this.CenterToScreen();
+            // Generate new order table
+            NewOrderTable(OrdersLst[GetActiveOrderIndex()]);
         }
 
         private void CalculateStatisticForNerds()
@@ -427,6 +476,12 @@ namespace Pizza
             DeserializeOrdersXml();
             InitComboBoxOrders();
             NewOrderTable(LastOrder);
+
+
+            if (this.comboBoxOrders.Items.Count < 2)
+            {
+                this.buttonDeleteOrder.Enabled = false;
+            }
         }
 
         private void ButtonConfig_Click(object sender, EventArgs e)
@@ -486,14 +541,34 @@ namespace Pizza
                     NewOrderTable(OrdersLst[activeOrderIdx]);
                     CalculateStatisticForNerds();
                     CalculateOrderSums();
-                    //SerializeOrdersXml();
-                    //DataHasChanged = true;
                 }
             }
             else
             {
                 MessageBox.Show("Besteller können nur aus der aktuellen Bestellung entfernt" +
                 " werden.", "Fehler", MessageBoxButtons.OK);
+            }
+        }
+
+        private void OrderControl_OrderControlOrderClosed(object sender, EventArgs e)
+        {
+            bool[] tmp = new bool[OrderCrtlLst.Count - 1];
+
+            for (int i = 0; i < OrderCrtlLst.Count - 1; i++)
+            {
+                if (OrderCrtlLst[i].OrderProps.Ordered || OrderCrtlLst[i].OrderProps.Articles.Equals(String.Empty))
+                {
+                    tmp[i] = true;
+                }
+            }
+
+            if (tmp.All(x => x))
+            {
+                buttonCloseOrder.Enabled = true;
+            }
+            else
+            {
+                buttonCloseOrder.Enabled = false;
             }
         }
 
@@ -506,10 +581,13 @@ namespace Pizza
             {
                 Order newOrder = new Order(new List<OrderProps>());
                 OrdersLst.Add(newOrder);
+                int i = GetActiveOrderIndex();
 
-                foreach (OrderProps orderProps in LastOrder.OrderPropsLst)
+                foreach (OrderProps orderProps in OrdersLst[i].OrderPropsLst)
                 {
                     OrderProps newOrderProp = new OrderProps(orderProps.CustomerName);
+                    newOrderProp.CustomerName = orderProps.CustomerName;
+                    newOrderProp.Credit = orderProps.Change;
                     newOrder.OrderPropsLst.Add(newOrderProp);
                 }
 
@@ -520,6 +598,8 @@ namespace Pizza
                 {
                     this.buttonDeleteOrder.Enabled = true;
                 }
+
+                SerializeOrdersXml();
             }
         }
 
@@ -547,12 +627,7 @@ namespace Pizza
                     }
                 }
             }
-            //else
-            //{
-            //    MessageBox.Show("Löschen nicht möglich - Nur eine verbleibende Bestellung", "Fehler", MessageBoxButtons.OK);
-            //}
         }
-        #endregion
 
         private void TimerAutoSave_Tick(object sender, EventArgs e)
         {
@@ -567,5 +642,29 @@ namespace Pizza
             SerializeOrdersXml();
             this.Focus();
         }
+
+        private void OrderControl_OrderControlNewCustomer(object sender, EventArgs e)
+        {
+            int orderIdx = GetActiveOrderIndex();
+            OrdersLst[orderIdx].OrderPropsLst.Add(new OrderProps(sender as String));
+            NewOrderTable(OrdersLst[orderIdx]);
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DataHasChanged)
+            {
+                SerializeOrdersXml();
+            }
+        }
+
+        private void ButtonCloseOrder_Click(object sender, EventArgs e)
+        {
+            int oderIdx = GetActiveOrderIndex();
+            OrdersLst[oderIdx].OrderClosed = true;
+            NewOrderTable(OrdersLst[oderIdx]);
+        }
+
+        #endregion
     }
 }

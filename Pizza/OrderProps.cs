@@ -61,7 +61,7 @@ namespace Pizza
     public class OrderProps
     {
         #region Properties
-    
+
         private string _customerName;
         private string _articles;
         private decimal _price;
@@ -131,6 +131,7 @@ namespace Pizza
             }
             set
             {
+
                 if (value < 0)
                 {
                     _price = 0;
@@ -267,12 +268,30 @@ namespace Pizza
 
         public OrderProps()
         {
-
+            this.CustomerName = String.Empty;
+            this.Articles = String.Empty;
+            this.Price = 0.00m;
+            this.Discount = 0.00m;
+            this.PricePayed = 0.00m;
+            this.Tip = 0.00m;
+            this.Change = 0.00m;
+            this.Credit = 0.00m;
+            this.Ordered = false;
+            this.PriceWithDiscount = 0.00m;
         }
 
         public OrderProps(string customerName)
         {
             this.CustomerName = customerName;
+            this.Articles = String.Empty;
+            this.Price = 0.00m;
+            this.Discount = 0.00m;
+            this.PricePayed = 0.00m;
+            this.Tip = 0.00m;
+            this.Change = 0.00m;
+            this.Credit = 0.00m;
+            this.Ordered = false;
+            this.PriceWithDiscount = 0.00m;
         }
 
         #endregion

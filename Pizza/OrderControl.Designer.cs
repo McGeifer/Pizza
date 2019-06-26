@@ -63,13 +63,13 @@
             this.contextMenuStripDeleteCustomer.Name = "contextMenuStripDeleteCustomer";
             this.contextMenuStripDeleteCustomer.ShowImageMargin = false;
             this.contextMenuStripDeleteCustomer.ShowItemToolTips = false;
-            this.contextMenuStripDeleteCustomer.Size = new System.Drawing.Size(156, 48);
+            this.contextMenuStripDeleteCustomer.Size = new System.Drawing.Size(148, 26);
             this.contextMenuStripDeleteCustomer.Text = "Besteller entfernen";
             // 
             // toolStripMenuItemDeleteCustomer
             // 
             this.toolStripMenuItemDeleteCustomer.Name = "toolStripMenuItemDeleteCustomer";
-            this.toolStripMenuItemDeleteCustomer.Size = new System.Drawing.Size(155, 22);
+            this.toolStripMenuItemDeleteCustomer.Size = new System.Drawing.Size(147, 22);
             this.toolStripMenuItemDeleteCustomer.Text = "Besteller entfernen";
             this.toolStripMenuItemDeleteCustomer.Click += new System.EventHandler(this.ToolStripMenuItemDeleteCustomer_Click);
             // 
@@ -90,7 +90,7 @@
             // 
             this.checkBoxOrder.AutoSize = true;
             this.checkBoxOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxOrder.Location = new System.Drawing.Point(945, 14);
+            this.checkBoxOrder.Location = new System.Drawing.Point(958, 14);
             this.checkBoxOrder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxOrder.Name = "checkBoxOrder";
             this.checkBoxOrder.Size = new System.Drawing.Size(15, 14);
@@ -131,7 +131,7 @@
             // labelPriceWithDiscount
             // 
             this.labelPriceWithDiscount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPriceWithDiscount.Location = new System.Drawing.Point(620, 10);
+            this.labelPriceWithDiscount.Location = new System.Drawing.Point(552, 10);
             this.labelPriceWithDiscount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPriceWithDiscount.Name = "labelPriceWithDiscount";
             this.labelPriceWithDiscount.Size = new System.Drawing.Size(62, 20);
@@ -142,7 +142,7 @@
             // textBoxPricePayed
             // 
             this.textBoxPricePayed.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxPricePayed.Location = new System.Drawing.Point(689, 7);
+            this.textBoxPricePayed.Location = new System.Drawing.Point(702, 7);
             this.textBoxPricePayed.MaxLength = 5;
             this.textBoxPricePayed.Name = "textBoxPricePayed";
             this.textBoxPricePayed.Size = new System.Drawing.Size(65, 26);
@@ -157,7 +157,7 @@
             // labelChange
             // 
             this.labelChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelChange.Location = new System.Drawing.Point(764, 10);
+            this.labelChange.Location = new System.Drawing.Point(777, 10);
             this.labelChange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelChange.Name = "labelChange";
             this.labelChange.Size = new System.Drawing.Size(62, 20);
@@ -168,7 +168,7 @@
             // textBoxTip
             // 
             this.textBoxTip.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxTip.Location = new System.Drawing.Point(843, 7);
+            this.textBoxTip.Location = new System.Drawing.Point(856, 7);
             this.textBoxTip.MaxLength = 5;
             this.textBoxTip.Name = "textBoxTip";
             this.textBoxTip.Size = new System.Drawing.Size(65, 26);
@@ -183,7 +183,7 @@
             // labelCredit
             // 
             this.labelCredit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCredit.Location = new System.Drawing.Point(550, 10);
+            this.labelCredit.Location = new System.Drawing.Point(628, 10);
             this.labelCredit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelCredit.Name = "labelCredit";
             this.labelCredit.Size = new System.Drawing.Size(62, 20);
@@ -210,7 +210,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "OrderControl";
-            this.Size = new System.Drawing.Size(975, 41);
+            this.Size = new System.Drawing.Size(989, 41);
             this.contextMenuStripDeleteCustomer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

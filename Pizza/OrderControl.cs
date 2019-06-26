@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Globalization;
 
 namespace Pizza
 {
@@ -16,8 +16,12 @@ namespace Pizza
         #region properties
 
         private OrderProps _orderProps;
+        private System.Windows.Forms.Button buttonNewCustomer;
+        private System.Windows.Forms.TextBox textBoxNewCustomer;
         public event EventHandler OrderControlChanged;
         public event EventHandler OrderControlToBeRemoved;
+        public event EventHandler OrderControlNewCustomer;
+        public event EventHandler OrderControlOrderClosed;
 
         public OrderProps OrderProps
         {
@@ -40,19 +44,73 @@ namespace Pizza
             InitializeComponent();
             //AddContextMenu();
             OrderProps = orderProps;
-            
-            this.labelCustomerName.Text = orderProps.CustomerName;
-            this.textBoxArticle.Text = orderProps.Articles;
-            this.textBoxPrice.Text = orderProps.Price.ToString("N2") + " € ";
-            this.textBoxDiscount.Text = orderProps.Discount.ToString("N2") + " € ";
-            this.labelCredit.Text = orderProps.Credit.ToString("N2") + " € ";
-            this.labelPriceWithDiscount.Text = orderProps.PriceWithDiscount.ToString("N2") + " € ";
-            this.textBoxPricePayed.Text = orderProps.PricePayed.ToString("N2") + " € ";
-            this.labelChange.Text = orderProps.Change.ToString("N2") + " € ";
-            this.textBoxTip.Text = orderProps.Tip.ToString("N2") + " € ";
-            this.checkBoxOrder.Checked = orderProps.Ordered;
+
+            this.labelCustomerName.Text = OrderProps.CustomerName;
+            this.textBoxArticle.Text = OrderProps.Articles;
+            this.textBoxPrice.Text = OrderProps.Price.ToString("N2") + " € ";
+            this.textBoxDiscount.Text = OrderProps.Discount.ToString("N2") + " € ";
+            this.labelCredit.Text = OrderProps.Credit.ToString("N2") + " € ";
+            this.labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString("N2") + " € ";
+            this.textBoxPricePayed.Text = OrderProps.PricePayed.ToString("N2") + " € ";
+            this.labelChange.Text = OrderProps.Change.ToString("N2") + " € ";
+            this.textBoxTip.Text = OrderProps.Tip.ToString("N2") + " € ";
+            this.checkBoxOrder.Checked = OrderProps.Ordered;
 
             OrderProps.ControlValueChanged += OrderProps_ControlValueChanged;
+        }
+
+        public OrderControl(string str)
+        {
+            // special control for adding a new customer
+            if (str == "NewCustomer")
+            {
+                InitializeComponent();
+                OrderProps = new OrderProps();
+
+                this.labelCustomerName.Text = OrderProps.CustomerName;
+                this.textBoxArticle.Text = OrderProps.Articles;
+                this.textBoxPrice.Text = OrderProps.Price.ToString("N2") + " € ";
+                this.textBoxDiscount.Text = OrderProps.Discount.ToString("N2") + " € ";
+                this.labelCredit.Text = OrderProps.Credit.ToString("N2") + " € ";
+                this.labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString("N2") + " € ";
+                this.textBoxPricePayed.Text = OrderProps.PricePayed.ToString("N2") + " € ";
+                this.labelChange.Text = OrderProps.Change.ToString("N2") + " € ";
+                this.textBoxTip.Text = OrderProps.Tip.ToString("N2") + " € ";
+                this.checkBoxOrder.Checked = OrderProps.Ordered;
+
+                this.labelCustomerName.Visible = false;
+
+                // create new button
+                this.SuspendLayout();
+
+                this.buttonNewCustomer = new System.Windows.Forms.Button
+                {
+                    Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+                    Location = new System.Drawing.Point(0, 6),
+                    Name = "buttonNewCustomer",
+                    Size = new System.Drawing.Size(93, 28),
+                    TabIndex = 0,
+                    Text = "Neu",
+                    UseVisualStyleBackColor = true
+                };
+
+                this.buttonNewCustomer.Click += new System.EventHandler(this.ButtonNewCustomer_Click);
+
+                this.Controls.Add(buttonNewCustomer);
+
+                // disable all other controls
+                this.textBoxArticle.Enabled = false;
+                this.textBoxPrice.Enabled = false;
+                this.textBoxDiscount.Enabled = false;
+                this.labelCredit.Enabled = false;
+                this.labelPriceWithDiscount.Enabled = false;
+                this.textBoxPricePayed.Enabled = false;
+                this.labelChange.Enabled = false;
+                this.textBoxTip.Enabled = false;
+                this.checkBoxOrder.Enabled = false;
+
+                this.ResumeLayout();
+            }
         }
 
         #endregion
@@ -66,68 +124,38 @@ namespace Pizza
             this.ContextMenu = orderControlContextMenu;
         }
 
-        private void DisableCustomerControl()
+        public void OrderControlDisable()
         {
-            textBoxArticle.Enabled = false;
             textBoxPrice.Enabled = false;
             textBoxDiscount.Enabled = false;
             textBoxPricePayed.Enabled = false;
+            textBoxTip.Enabled = false;
+
+            if (!this.OrderProps.Articles.Equals(String.Empty))
+            {
+                textBoxArticle.Enabled = false;
+                
+            }
+            else
+            {
+                checkBoxOrder.Enabled = false;
+            }
         }
 
-        private void EnableCustomerControl()
+        public void OrderControlEnable()
         {
             textBoxArticle.Enabled = true;
             textBoxPrice.Enabled = true;
             textBoxDiscount.Enabled = true;
             textBoxPricePayed.Enabled = true;
+            textBoxTip.Enabled = true;
+            checkBoxOrder.Enabled = true;
         }
 
         public void CalcControlSums()
         {
-            // calculate price with discount
-            decimal priceWithDiscount = OrderProps.Price - (OrderProps.Discount + OrderProps.Credit);
-
-            if (priceWithDiscount < 0)
-            {
-                this.labelPriceWithDiscount.Text = " ??? ";
-                MessageBox.Show("Rabatt größer als Preis!", "Fehler", MessageBoxButtons.OK);
-                this.textBoxDiscount.SelectAll();
-                this.textBoxDiscount.Focus();
-            }
-            else
-            {
-                OrderProps.PriceWithDiscount = priceWithDiscount;
-                this.labelPriceWithDiscount.Text = OrderProps.PriceWithDiscount.ToString("N2") + " € ";
-            }
-
-            // calculate change
-            decimal change = OrderProps.PricePayed - OrderProps.PriceWithDiscount;
-            OrderProps.Change = change;
-            this.labelChange.Text = OrderProps.Change.ToString("N2") + " € ";
-
-            //check tip, recalculate change
-            if (textBoxTip.Text != " ??? ")
-            {
-                if (OrderProps.Tip > OrderProps.Change && OrderProps.Tip != 0)
-                {
-                    MessageBox.Show("Trinkgeld größer als Guthaben!", "Fehler", MessageBoxButtons.OK);
-                    textBoxTip.Text = " ??? ";
-                    this.textBoxTip.SelectAll();
-                    this.textBoxTip.Focus();
-                }
-                else
-                {
-                    if (decimal.TryParse(textBoxTip.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
-                    {
-                        OrderProps.Tip = d;
-                        OrderProps.Change = OrderProps.Change - OrderProps.Tip;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
-                    }
-                }
-            }
+            OrderProps.PriceWithDiscount = OrderProps.Price - OrderProps.Discount;
+            OrderProps.Change = (OrderProps.Credit + OrderProps.PricePayed - OrderProps.Tip) - OrderProps.PriceWithDiscount;
         }
 
         // Add a currency sign (€) to the end of the text box/ label if it doesn't already exists.
@@ -138,6 +166,7 @@ namespace Pizza
                 t.Text = t.Text + " € ";
             }
         }
+
         private void LabelAddCurrencySign(Label l)
         {
             if (!l.Text.Contains("€") && (!String.IsNullOrEmpty(l.Text) || !String.IsNullOrWhiteSpace(l.Text)))
@@ -146,9 +175,70 @@ namespace Pizza
             }
         }
 
+        private void ShowToolTip(TextBox textBox, string message)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.Show(message, textBox, textBox.Width, textBox.Height, 3000);
+        }
+
         #endregion
 
         #region event handler
+
+        private void ButtonNewCustomer_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResultNewCustomer = MessageBox.Show("Neuen Besteller anlegen?", "Hinweis", MessageBoxButtons.YesNo);
+
+            if (dialogResultNewCustomer == DialogResult.Yes)
+            {
+                this.SuspendLayout();
+                this.buttonNewCustomer.Visible = false;
+
+                this.textBoxNewCustomer = new TextBox
+                {
+                    Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+                    Location = new System.Drawing.Point(0, 6),
+                    Margin = new System.Windows.Forms.Padding(4, 5, 4, 5),
+                    Multiline = true,
+                    Name = "textBoxArticle",
+                    Size = new System.Drawing.Size(93, 28),
+                    TabIndex = 1,
+                    Text = "Bestellung"
+
+                };
+
+                this.textBoxNewCustomer.KeyPress += TextBoxNewCustomer_KeyPress;
+                this.textBoxNewCustomer.Leave += TextBoxNewCustomer_Leave;
+
+                this.Controls.Add(textBoxNewCustomer);
+                this.ResumeLayout();
+                this.textBoxNewCustomer.SelectAll();
+                this.textBoxNewCustomer.Focus();
+            }
+        }
+
+        private void TextBoxNewCustomer_Leave(object sender, EventArgs e)
+        {
+            if (this.textBoxNewCustomer.Text.Length >= 2)
+            {
+                this.textBoxNewCustomer.Leave -= TextBoxNewCustomer_Leave;
+                OnOrderControlNewCustomer(textBoxNewCustomer.Text, e);
+            }
+            else
+            {
+                ShowToolTip(textBoxNewCustomer, "Name des Besteller muss mindestens 2 Zeichen lang sein!");
+                this.textBoxNewCustomer.SelectAll();
+                this.textBoxNewCustomer.Focus();
+            }
+        }
+
+        private void TextBoxNewCustomer_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (TextBoxInputConfirmed(e))
+            {
+                TextBoxNewCustomer_Leave(sender, e);
+            }
+        }
 
         // Is the key pressed a decimal or comma character?
         private bool KeyPressedIsDecimalOrComma(object sender, KeyPressEventArgs e)
@@ -187,7 +277,7 @@ namespace Pizza
                 return false;
             }
         }
-        
+
         // 
         //  TextBox Article
         //
@@ -202,7 +292,10 @@ namespace Pizza
 
         private void TextBoxArticle_Leave(object sender, EventArgs e)
         {
-            OrderProps.Articles = textBoxArticle.Text;
+            if (!textBoxArticle.Text.Equals(OrderProps.Articles))
+            {
+                OrderProps.Articles = textBoxArticle.Text;
+            }
         }
 
         // 
@@ -213,14 +306,15 @@ namespace Pizza
             if (TextBoxInputConfirmed(e))
             {
                 e.Handled = true;
+                textBoxDiscount.SelectAll();
                 textBoxDiscount.Focus();
             }
 
-            if(KeyPressedIsDecimalOrComma(sender, e))    
+            if (KeyPressedIsDecimalOrComma(sender, e))
             {
                 e.Handled = true;
             }
-            
+
             if (AllowOnlyOneComma(sender, e))
             {
                 e.Handled = true;
@@ -234,14 +328,20 @@ namespace Pizza
                 OrderProps.Price = 0;
             }
 
-            if (decimal.TryParse(textBoxPrice.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+            if (decimal.TryParse(textBoxPrice.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal val))
             {
-                OrderProps.Price = d;
+                if (val < OrderProps.Discount)
+                {
+                    OrderProps.Discount = 0;
+                    ShowToolTip(textBoxDiscount, "Wert prüfen!");
+                }
+
+                OrderProps.Price = val;
                 CalcControlSums();
             }
             else
             {
-                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+                ShowToolTip(textBoxDiscount, "Bitte gültigen Wert eingeben.");
             }
         }
 
@@ -264,6 +364,7 @@ namespace Pizza
             if (TextBoxInputConfirmed(e))
             {
                 e.Handled = true;
+                textBoxPricePayed.SelectAll();
                 textBoxPricePayed.Focus();
             }
 
@@ -284,15 +385,25 @@ namespace Pizza
             {
                 OrderProps.Discount = 0;
             }
-            
-            if (decimal.TryParse(textBoxDiscount.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+
+            if (decimal.TryParse(textBoxDiscount.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal val))
             {
-                OrderProps.Discount = d;
-                CalcControlSums();
+                if (val <= OrderProps.Price)
+                {
+                    OrderProps.Discount = val;
+                    CalcControlSums();
+                }
+                else
+                {
+                    ShowToolTip(textBoxDiscount, "Rabatt größer als Preis");
+                    textBoxDiscount.Text = OrderProps.Discount.ToString("N2") + " € ";
+                    textBoxDiscount.SelectAll();
+                    textBoxDiscount.Focus();
+                }
             }
             else
             {
-                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+                ShowToolTip(textBoxDiscount, "Bitte gültigen Wert eingeben.");
             }
         }
 
@@ -315,6 +426,7 @@ namespace Pizza
             if (TextBoxInputConfirmed(e))
             {
                 e.Handled = true;
+                textBoxTip.SelectAll();
                 textBoxTip.Focus();
             }
 
@@ -335,15 +447,25 @@ namespace Pizza
             {
                 OrderProps.PricePayed = 0;
             }
-            
-            if (decimal.TryParse(textBoxPricePayed.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+
+            if (decimal.TryParse(textBoxPricePayed.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal val))
             {
-                OrderProps.PricePayed = d;
-                CalcControlSums();
+                if (OrderProps.PriceWithDiscount > OrderProps.Credit || val == 0)
+                {
+                    OrderProps.PricePayed = val;
+                    CalcControlSums();
+                }
+                else
+                {
+                    ShowToolTip(textBoxPricePayed, "Guthaben deckt Summe");
+                    OrderProps.PricePayed = 0;
+                    //textBoxPricePayed.SelectAll();
+                    //textBoxPricePayed.Focus(); 
+                }
             }
             else
             {
-                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+                ShowToolTip(textBoxPricePayed, "Bitte gültigen Wert eingeben.");
             }
         }
 
@@ -386,15 +508,22 @@ namespace Pizza
             {
                 OrderProps.Tip = 0;
             }
-            
-            if (decimal.TryParse(textBoxTip.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal d))
+
+            if (decimal.TryParse(textBoxTip.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal val))
             {
-                OrderProps.Tip = d;
-                CalcControlSums();
+                if (OrderProps.Change - val >= 0)
+                {
+                    OrderProps.Tip = val;
+                    CalcControlSums();
+                }
+                else
+                {
+                    ShowToolTip(textBoxTip, "Trinkgeld größer Restgeld");
+                }
             }
             else
             {
-                MessageBox.Show("Bitte gültigen Wert eingeben.", "Fehler", MessageBoxButtons.OK);
+                ShowToolTip(textBoxTip, "Bitte gültigen Wert eingeben!");
             }
         }
 
@@ -414,11 +543,18 @@ namespace Pizza
         //
         private void CheckBoxOrder_Click(object sender, EventArgs e)
         {
-            OrderProps.Articles = "Das ist ein Test";
-            
             if (checkBoxOrder.Checked)
             {
-                DisableCustomerControl();
+                if (this.OrderProps.Change < 0)
+                {
+                    MessageBox.Show("Posten nicht bezahlt!", "Fehler", MessageBoxButtons.OK);
+                    this.OrderProps.Ordered = false;
+                }
+                else
+                {
+                    this.OrderProps.Ordered = true;
+                    OrderControlDisable();
+                }
             }
             else
             {
@@ -427,10 +563,12 @@ namespace Pizza
 
                 if (dialogResult == DialogResult.Yes)
                 {
-                    EnableCustomerControl();
-                    checkBoxOrder.Checked = false;
+                    this.OrderProps.Ordered = false;
+                    OrderControlEnable();
                 }
             }
+
+            OnOrderControlOrderClosed(sender, e);
         }
 
         private void ToolStripMenuItemDeleteCustomer_Click(object sender, EventArgs e)
@@ -450,6 +588,28 @@ namespace Pizza
             switch (objSender as string)
             {
                 case "Articles":
+                    if (OrderProps.Articles.Equals(String.Empty))
+                    {
+                        this.textBoxPrice.Enabled = false;
+                        this.textBoxDiscount.Enabled = false;
+                        this.labelCredit.Enabled = false;
+                        this.labelPriceWithDiscount.Enabled = false;
+                        this.textBoxPricePayed.Enabled = false;
+                        this.labelChange.Enabled = false;
+                        this.textBoxTip.Enabled = false;
+                        this.checkBoxOrder.Enabled = false;
+                    }
+                    else
+                    {
+                        this.textBoxPrice.Enabled = true;
+                        this.textBoxDiscount.Enabled = true;
+                        this.labelCredit.Enabled = true;
+                        this.labelPriceWithDiscount.Enabled = true;
+                        this.textBoxPricePayed.Enabled = true;
+                        this.labelChange.Enabled = true;
+                        this.textBoxTip.Enabled = true;
+                        this.checkBoxOrder.Enabled = true;
+                    }
 
                     textBoxArticle.Text = OrderProps.Articles;
                     break;
@@ -505,6 +665,25 @@ namespace Pizza
             }
         }
 
+        protected virtual void OnOrderControlNewCustomer(string customerName, EventArgs e)
+        {
+            EventHandler orderControlNewCustomer = OrderControlNewCustomer;
+
+            if (orderControlNewCustomer != null)
+            {
+                orderControlNewCustomer(customerName, e);
+            }
+        }
+
+        protected virtual void OnOrderControlOrderClosed(object obj, EventArgs e)
+        {
+            EventHandler orderControlOrderClosed = OrderControlOrderClosed;
+
+            if (orderControlOrderClosed != null)
+            {
+                orderControlOrderClosed(obj, e);
+            }
+        }
         #endregion
     }
 }
