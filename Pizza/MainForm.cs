@@ -277,7 +277,7 @@ namespace Pizza
             orderControlNewCustomer.OrderControlNewCustomer += OrderControl_OrderControlNewCustomer;
 
             // Disable control(s) if an order has been submitted (not the last one which is the special
-            // control for adding a new customer) or there is no article to order.
+            // control for adding a new customer) or if there is no article to order.
             bool[] tmp = new bool[OrderCrtlLst.Count - 1];
 
             for (int j = 0; j < OrderCrtlLst.Count - 1; j ++)
@@ -330,7 +330,7 @@ namespace Pizza
                 this.CenterToScreen();
             }
 
-            CalculateStatisticForNerds();
+            CalculateStatisticsForNerds();
             CalculateOrderSums();
             SerializeOrdersXml();
         }
@@ -365,13 +365,21 @@ namespace Pizza
             NewOrderTable(OrdersLst[GetActiveOrderIndex()]);
         }
 
-        private void CalculateStatisticForNerds()
+        private void CalculateStatisticsForNerds()
         {
-            int totalOrders = 0;
+            int     totalOrders = 0;
             decimal totalOrdersPrice = 0;
             decimal totalOrdersTip = 0;
+            int     totalArticles = 0;
+            int     totalPizzas = 0;
+            int     totalSalads = 0;
+            int     totalunknown = 0;
             decimal averageOrdersPrice = 0;
             decimal averageOrdersTip = 0;
+            decimal maxSingleTip = 0;
+            decimal shareOfPizza = 0;
+            decimal shareOfSalad = 0;
+            decimal shareOfUnknown = 0;
 
             totalOrders = OrdersLst.Count();
 
@@ -383,17 +391,48 @@ namespace Pizza
                     {
                         totalOrdersPrice += orderProps.Price;
                         totalOrdersTip += orderProps.Tip;
+
+                        if (orderProps.Tip > maxSingleTip)
+                        {
+                            maxSingleTip = orderProps.Tip;
+                        }
+
+                        if (!orderProps.Articles.Equals(String.Empty))
+                        {
+                            totalArticles++;
+
+                            if (orderProps.Articles.Contains("Pizza") || orderProps.Articles.Contains("Mittags"))
+                            {
+                                totalPizzas++;
+                            }
+                            else if (orderProps.Articles.Contains("Salat"))
+                            {
+                                totalSalads++;
+                            }
+                            else
+                            {
+                                totalunknown++;
+                            }
+                        }
+
                     }
                 }
 
                 averageOrdersPrice = totalOrdersPrice / totalOrders;
                 averageOrdersTip = totalOrdersTip / totalOrders;
+                shareOfPizza = (totalPizzas * 100.0m) / totalArticles;
+                shareOfSalad = (totalSalads  * 100.0m) / totalArticles;
+                shareOfUnknown = (totalunknown * 100.0m) / totalArticles;
 
                 labelTotalNumberOfOrders.Text = OrdersLst.Count().ToString("D");
                 labelTotalOrdersPrice.Text = totalOrdersPrice.ToString("N2") + " €";
                 labelAverageOrdersPrice.Text = averageOrdersPrice.ToString("N2") + " €";
+                labelMaxTip.Text = maxSingleTip.ToString("N2") + " €";
                 labelTotalOrdersTip.Text = totalOrdersTip.ToString("N2") + " €";
-                labelAverageOrdersTip.Text = averageOrdersTip.ToString("N2") + " €"; 
+                labelAverageOrdersTip.Text = averageOrdersTip.ToString("N2") + " €";
+                labelShareOfPizza.Text = shareOfPizza.ToString("N2") + " %";
+                labelShareOfSalad.Text = shareOfSalad.ToString("N2") + " %";
+                labelShareOfUnknown.Text = shareOfUnknown.ToString("N2") + " %";
             }
         }
 
@@ -431,7 +470,7 @@ namespace Pizza
 
                 foreach (Order order in OrdersLst)
                 {
-                    if (order.OrderTimestamp.ToString() == timeStamp)
+                    if (order.OrderTimestamp.ToString().Equals(timeStamp))
                     {
                         return OrdersLst.IndexOf(order);
                     }
@@ -507,7 +546,7 @@ namespace Pizza
 
                 foreach (Order order in OrdersLst)
                 {
-                    if (order.OrderTimestamp.ToString() == timeStamp)
+                    if (order.OrderTimestamp.ToString().Equals(timeStamp))
                     {
                         NewOrderTable(order);
                         break;
@@ -518,7 +557,7 @@ namespace Pizza
 
         private void OrderControl_ControlValueChanged(object objSender, EventArgs e)
         {
-            CalculateStatisticForNerds();
+            CalculateStatisticsForNerds();
             CalculateOrderSums();
             SerializeOrdersXml();
             DataHasChanged = true;
@@ -539,7 +578,7 @@ namespace Pizza
                     OrderControl orderControl = sender as OrderControl;
                     OrdersLst[activeOrderIdx].OrderPropsLst.Remove(orderControl.OrderProps);
                     NewOrderTable(OrdersLst[activeOrderIdx]);
-                    CalculateStatisticForNerds();
+                    CalculateStatisticsForNerds();
                     CalculateOrderSums();
                 }
             }
@@ -666,5 +705,11 @@ namespace Pizza
         }
 
         #endregion
+
+        private void ButtonHallOfFame_Click(object sender, EventArgs e)
+        {
+            FameAndShameForm fameAndShameForm = new FameAndShameForm();
+            fameAndShameForm.ShowDialog();
+        }
     }
 }

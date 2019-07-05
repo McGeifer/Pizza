@@ -50,7 +50,16 @@
             this.labelTotalNumberOfOrders = new System.Windows.Forms.Label();
             this.labelTotalOrdersPrice = new System.Windows.Forms.Label();
             this.groupBoxStatistics = new System.Windows.Forms.GroupBox();
-            this.buttonCloseOrder = new System.Windows.Forms.Button();
+            this.labelMaxTip = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.buttonHallOfFame = new System.Windows.Forms.Button();
+            this.label29 = new System.Windows.Forms.Label();
+            this.labelShareOfUnknown = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.labelShareOfSalad = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.labelShareOfPizza = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.labelAverageOrdersTip = new System.Windows.Forms.Label();
             this.labelTotalOrdersTip = new System.Windows.Forms.Label();
@@ -59,6 +68,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.labelAverageOrdersPrice = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.buttonCloseOrder = new System.Windows.Forms.Button();
             this.panelOrderHead = new System.Windows.Forms.Panel();
             this.label26 = new System.Windows.Forms.Label();
             this.panelOrder = new System.Windows.Forms.Panel();
@@ -271,6 +281,16 @@
             // 
             // groupBoxStatistics
             // 
+            this.groupBoxStatistics.Controls.Add(this.labelMaxTip);
+            this.groupBoxStatistics.Controls.Add(this.label31);
+            this.groupBoxStatistics.Controls.Add(this.buttonHallOfFame);
+            this.groupBoxStatistics.Controls.Add(this.label29);
+            this.groupBoxStatistics.Controls.Add(this.labelShareOfUnknown);
+            this.groupBoxStatistics.Controls.Add(this.label27);
+            this.groupBoxStatistics.Controls.Add(this.labelShareOfSalad);
+            this.groupBoxStatistics.Controls.Add(this.label24);
+            this.groupBoxStatistics.Controls.Add(this.labelShareOfPizza);
+            this.groupBoxStatistics.Controls.Add(this.label22);
             this.groupBoxStatistics.Controls.Add(this.label17);
             this.groupBoxStatistics.Controls.Add(this.labelAverageOrdersTip);
             this.groupBoxStatistics.Controls.Add(this.labelTotalOrdersTip);
@@ -290,16 +310,101 @@
             this.groupBoxStatistics.TabStop = false;
             this.groupBoxStatistics.Text = "Statistiken für Nerds und für mich";
             // 
-            // buttonCloseOrder
+            // labelMaxTip
             // 
-            this.buttonCloseOrder.Enabled = false;
-            this.buttonCloseOrder.Location = new System.Drawing.Point(7, 19);
-            this.buttonCloseOrder.Name = "buttonCloseOrder";
-            this.buttonCloseOrder.Size = new System.Drawing.Size(139, 28);
-            this.buttonCloseOrder.TabIndex = 18;
-            this.buttonCloseOrder.Text = "Bestellung abschließen";
-            this.buttonCloseOrder.UseVisualStyleBackColor = true;
-            this.buttonCloseOrder.Click += new System.EventHandler(this.ButtonCloseOrder_Click);
+            this.labelMaxTip.Location = new System.Drawing.Point(302, 17);
+            this.labelMaxTip.Name = "labelMaxTip";
+            this.labelMaxTip.Size = new System.Drawing.Size(58, 16);
+            this.labelMaxTip.TabIndex = 27;
+            this.labelMaxTip.Text = "8888,88 €";
+            this.labelMaxTip.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Location = new System.Drawing.Point(194, 15);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(93, 16);
+            this.label31.TabIndex = 26;
+            this.label31.Text = "Top Trinkgeld";
+            // 
+            // buttonHallOfFame
+            // 
+            this.buttonHallOfFame.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonHallOfFame.Location = new System.Drawing.Point(581, 26);
+            this.buttonHallOfFame.Name = "buttonHallOfFame";
+            this.buttonHallOfFame.Size = new System.Drawing.Size(125, 28);
+            this.buttonHallOfFame.TabIndex = 20;
+            this.buttonHallOfFame.Text = "Hall of Fame && Shame";
+            this.buttonHallOfFame.UseVisualStyleBackColor = true;
+            this.buttonHallOfFame.Click += new System.EventHandler(this.ButtonHallOfFame_Click);
+            // 
+            // label29
+            // 
+            this.label29.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label29.Location = new System.Drawing.Point(533, 16);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(2, 50);
+            this.label29.TabIndex = 24;
+            this.label29.Text = "label29";
+            // 
+            // labelShareOfUnknown
+            // 
+            this.labelShareOfUnknown.Location = new System.Drawing.Point(482, 51);
+            this.labelShareOfUnknown.Name = "labelShareOfUnknown";
+            this.labelShareOfUnknown.Size = new System.Drawing.Size(45, 16);
+            this.labelShareOfUnknown.TabIndex = 23;
+            this.labelShareOfUnknown.Text = "88,88 %";
+            this.labelShareOfUnknown.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(374, 49);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(97, 16);
+            this.label27.TabIndex = 22;
+            this.label27.Text = "Anteil Sonstige";
+            // 
+            // labelShareOfSalad
+            // 
+            this.labelShareOfSalad.Location = new System.Drawing.Point(482, 34);
+            this.labelShareOfSalad.Name = "labelShareOfSalad";
+            this.labelShareOfSalad.Size = new System.Drawing.Size(45, 16);
+            this.labelShareOfSalad.TabIndex = 21;
+            this.labelShareOfSalad.Text = "88,88 %";
+            this.labelShareOfSalad.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(374, 32);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(75, 16);
+            this.label24.TabIndex = 20;
+            this.label24.Text = "Anteil Salat";
+            // 
+            // labelShareOfPizza
+            // 
+            this.labelShareOfPizza.Location = new System.Drawing.Point(482, 18);
+            this.labelShareOfPizza.Name = "labelShareOfPizza";
+            this.labelShareOfPizza.Size = new System.Drawing.Size(45, 16);
+            this.labelShareOfPizza.TabIndex = 19;
+            this.labelShareOfPizza.Text = "88,88 %";
+            this.labelShareOfPizza.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(374, 16);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(76, 16);
+            this.label22.TabIndex = 18;
+            this.label22.Text = "Anteil Pizza";
             // 
             // label17
             // 
@@ -375,6 +480,18 @@
             this.label13.Size = new System.Drawing.Size(94, 16);
             this.label13.TabIndex = 10;
             this.label13.Text = "Bestellwert (Ø)";
+            // 
+            // buttonCloseOrder
+            // 
+            this.buttonCloseOrder.Enabled = false;
+            this.buttonCloseOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonCloseOrder.Location = new System.Drawing.Point(7, 19);
+            this.buttonCloseOrder.Name = "buttonCloseOrder";
+            this.buttonCloseOrder.Size = new System.Drawing.Size(139, 28);
+            this.buttonCloseOrder.TabIndex = 18;
+            this.buttonCloseOrder.Text = "Bestellung abschließen";
+            this.buttonCloseOrder.UseVisualStyleBackColor = true;
+            this.buttonCloseOrder.Click += new System.EventHandler(this.ButtonCloseOrder_Click);
             // 
             // panelOrderHead
             // 
@@ -595,6 +712,16 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Timer timerAutoSave;
         private System.Windows.Forms.Button buttonCloseOrder;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label labelShareOfUnknown;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label labelShareOfSalad;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label labelShareOfPizza;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label labelMaxTip;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Button buttonHallOfFame;
     }
 }
 

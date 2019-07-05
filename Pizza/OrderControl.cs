@@ -18,10 +18,6 @@ namespace Pizza
         private OrderProps _orderProps;
         private System.Windows.Forms.Button buttonNewCustomer;
         private System.Windows.Forms.TextBox textBoxNewCustomer;
-        public event EventHandler OrderControlChanged;
-        public event EventHandler OrderControlToBeRemoved;
-        public event EventHandler OrderControlNewCustomer;
-        public event EventHandler OrderControlOrderClosed;
 
         public OrderProps OrderProps
         {
@@ -36,13 +32,11 @@ namespace Pizza
         public OrderControl()
         {
             InitializeComponent();
-            //AddContextMenu();
         }
 
         public OrderControl(OrderProps orderProps)
         {
             InitializeComponent();
-            //AddContextMenu();
             OrderProps = orderProps;
 
             this.labelCustomerName.Text = OrderProps.CustomerName;
@@ -62,7 +56,7 @@ namespace Pizza
         public OrderControl(string str)
         {
             // special control for adding a new customer
-            if (str == "NewCustomer")
+            if (str.Equals("NewCustomer"))
             {
                 InitializeComponent();
                 OrderProps = new OrderProps();
@@ -95,7 +89,6 @@ namespace Pizza
                 };
 
                 this.buttonNewCustomer.Click += new System.EventHandler(this.ButtonNewCustomer_Click);
-
                 this.Controls.Add(buttonNewCustomer);
 
                 // disable all other controls
@@ -184,6 +177,11 @@ namespace Pizza
         #endregion
 
         #region event handler
+
+        public event EventHandler OrderControlChanged;
+        public event EventHandler OrderControlToBeRemoved;
+        public event EventHandler OrderControlNewCustomer;
+        public event EventHandler OrderControlOrderClosed;
 
         private void ButtonNewCustomer_Click(object sender, EventArgs e)
         {
@@ -285,7 +283,7 @@ namespace Pizza
         {
             if (TextBoxInputConfirmed(e))
             {
-                textBoxPrice.Focus();
+                
                 e.Handled = true;
             }
         }
@@ -295,6 +293,8 @@ namespace Pizza
             if (!textBoxArticle.Text.Equals(OrderProps.Articles))
             {
                 OrderProps.Articles = textBoxArticle.Text;
+                textBoxPrice.Focus();
+                textBoxPrice.SelectAll();
             }
         }
 
@@ -459,8 +459,6 @@ namespace Pizza
                 {
                     ShowToolTip(textBoxPricePayed, "Guthaben deckt Summe");
                     OrderProps.PricePayed = 0;
-                    //textBoxPricePayed.SelectAll();
-                    //textBoxPricePayed.Focus(); 
                 }
             }
             else
