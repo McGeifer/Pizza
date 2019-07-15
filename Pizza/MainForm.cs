@@ -226,6 +226,7 @@ namespace Pizza
             {
                 comboBoxOrders.Items.Add(dateTime.ToString());
             }
+
             
             if(comboBoxOrders.Items.Count > 0)
             {
@@ -644,6 +645,8 @@ namespace Pizza
 
         private void ButtonDeleteOrder_Click(object sender, EventArgs e)
         {
+            // !!!!!!!!!! Löschen deaktivieren wen ausgewählte Bestellung nicht die letzte in der Liste ist !!!!!!!!!!!!
+        
             if (OrdersLst.Count > 1)
             {
                 DialogResult dialogResultDeleteOrder = MessageBox.Show("Durch Löschen der aktuellen" +
@@ -708,7 +711,7 @@ namespace Pizza
 
         private void ButtonHallOfFame_Click(object sender, EventArgs e)
         {
-            FameAndShameForm fameAndShameForm = new FameAndShameForm();
+            FameAndShameForm fameAndShameForm = new FameAndShameForm(OrdersLst);
             fameAndShameForm.ShowDialog();
         }
     }
