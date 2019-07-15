@@ -63,11 +63,19 @@ namespace Pizza
                             _tmpLst[customerIdx].MeanOrderSum =
                                 _tmpLst[customerIdx].OrderSum / _tmpLst[customerIdx].OrderCount;
                         }
+                        else
+                        {
+                            _tmpLst[customerIdx].MeanOrderSum = 0;
+                        }
 
                         if (_tmpLst[customerIdx].OrderSum > 0)
                         {
                             _tmpLst[customerIdx].MeanTip =
                                  _tmpLst[customerIdx].TipSum / _tmpLst[customerIdx].OrderSum;
+                        }
+                        else
+                        {
+                            _tmpLst[customerIdx].MeanTip = 0;
                         }
                     }
                 }
@@ -87,16 +95,22 @@ namespace Pizza
             FameAndShamePropsLst.Sort((x, y) => y.MeanTip.CompareTo(x.MeanTip));
 
             labelFameTip.Text =
-                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + FameAndShamePropsLst[0].MeanTip.ToString("P") + Environment.NewLine +
-                "2. " + FameAndShamePropsLst[1].CustomerName + " - " + FameAndShamePropsLst[1].MeanTip.ToString("P") + Environment.NewLine +
-                "3. " + FameAndShamePropsLst[2].CustomerName + " - " + FameAndShamePropsLst[2].MeanTip.ToString("P");
+                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + 
+                FameAndShamePropsLst[0].MeanTip.ToString("P") + Environment.NewLine +
+                "2. " + FameAndShamePropsLst[1].CustomerName + " - " +
+                FameAndShamePropsLst[1].MeanTip.ToString("P") + Environment.NewLine +
+                "3. " + FameAndShamePropsLst[2].CustomerName + " - " +
+                FameAndShamePropsLst[2].MeanTip.ToString("P");
 
             FameAndShamePropsLst.Sort((x, y) => x.MeanTip.CompareTo(y.MeanTip));
 
             labelShameTip.Text =
-                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + FameAndShamePropsLst[0].MeanTip.ToString("P") + Environment.NewLine +
-                "2. " + FameAndShamePropsLst[1].CustomerName + " - " + FameAndShamePropsLst[1].MeanTip.ToString("P") + Environment.NewLine +
-                "3. " + FameAndShamePropsLst[2].CustomerName + " - " + FameAndShamePropsLst[2].MeanTip.ToString("P");
+                "1. " + FameAndShamePropsLst[0].CustomerName + " - " +
+                FameAndShamePropsLst[0].MeanTip.ToString("P") + Environment.NewLine +
+                "2. " + FameAndShamePropsLst[1].CustomerName + " - " +
+                FameAndShamePropsLst[1].MeanTip.ToString("P") + Environment.NewLine +
+                "3. " + FameAndShamePropsLst[2].CustomerName + " - " +
+                FameAndShamePropsLst[2].MeanTip.ToString("P");
         }
 
         private void MeanOrderPrice()
@@ -104,16 +118,22 @@ namespace Pizza
             FameAndShamePropsLst.Sort((x, y) => y.MeanOrderSum.CompareTo(x.MeanOrderSum));
 
             labelFameOrderSum.Text =
-                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + FameAndShamePropsLst[0].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
-                "2. " + FameAndShamePropsLst[1].CustomerName + " - " + FameAndShamePropsLst[1].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
-                "3. " + FameAndShamePropsLst[2].CustomerName + " - " + FameAndShamePropsLst[2].MeanOrderSum.ToString("N2") + " € ";
+                "1. " + FameAndShamePropsLst[0].CustomerName + " - " +
+                FameAndShamePropsLst[0].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
+                "2. " + FameAndShamePropsLst[1].CustomerName + " - " +
+                FameAndShamePropsLst[1].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
+                "3. " + FameAndShamePropsLst[2].CustomerName + " - " +
+                FameAndShamePropsLst[2].MeanOrderSum.ToString("N2") + " € ";
                                                                                                                       
             FameAndShamePropsLst.Sort((x, y) => x.MeanOrderSum.CompareTo(y.MeanOrderSum));                            
                                                                                                                       
             labelShameOrderSum.Text =                                                                                 
-                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + FameAndShamePropsLst[0].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
-                "2. " + FameAndShamePropsLst[1].CustomerName + " - " + FameAndShamePropsLst[1].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
-                "3. " + FameAndShamePropsLst[2].CustomerName + " - " + FameAndShamePropsLst[2].MeanOrderSum.ToString("N2") + " € ";
+                "1. " + FameAndShamePropsLst[0].CustomerName + " - " +
+                FameAndShamePropsLst[0].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
+                "2. " + FameAndShamePropsLst[1].CustomerName + " - " +
+                FameAndShamePropsLst[1].MeanOrderSum.ToString("N2") + " € " + Environment.NewLine +
+                "3. " + FameAndShamePropsLst[2].CustomerName + " - " +
+                FameAndShamePropsLst[2].MeanOrderSum.ToString("N2") + " € ";
         }
 
         private void NumberOfOrders()
@@ -121,16 +141,22 @@ namespace Pizza
             FameAndShamePropsLst.Sort((x, y) => y.OrderCount.CompareTo(x.OrderCount));
 
             labelFameOrderCount.Text =
-                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + FameAndShamePropsLst[0].OrderCount.ToString("D") + Environment.NewLine +
-                "2. " + FameAndShamePropsLst[1].CustomerName + " - " + FameAndShamePropsLst[1].OrderCount.ToString("D") + Environment.NewLine +
-                "3. " + FameAndShamePropsLst[2].CustomerName + " - " + FameAndShamePropsLst[2].OrderCount.ToString("D");
+                "1. " + FameAndShamePropsLst[0].CustomerName + " - " +
+                FameAndShamePropsLst[0].OrderCount.ToString("D") + Environment.NewLine +
+                "2. " + FameAndShamePropsLst[1].CustomerName + " - " +
+                FameAndShamePropsLst[1].OrderCount.ToString("D") + Environment.NewLine +
+                "3. " + FameAndShamePropsLst[2].CustomerName + " - " +
+                FameAndShamePropsLst[2].OrderCount.ToString("D");
                                                                                                                     
             FameAndShamePropsLst.Sort((x, y) => x.OrderCount.CompareTo(y.OrderCount));
 
             labelShameOrderCount.Text =                                                                               
-                "1. " + FameAndShamePropsLst[0].CustomerName + " - " + FameAndShamePropsLst[0].OrderCount.ToString("D") + Environment.NewLine +
-                "2. " + FameAndShamePropsLst[1].CustomerName + " - " + FameAndShamePropsLst[1].OrderCount.ToString("D") + Environment.NewLine +
-                "3. " + FameAndShamePropsLst[2].CustomerName + " - " + FameAndShamePropsLst[2].OrderCount.ToString("D");
+                "1. " + FameAndShamePropsLst[0].CustomerName + " - " +
+                FameAndShamePropsLst[0].OrderCount.ToString("D") + Environment.NewLine +
+                "2. " + FameAndShamePropsLst[1].CustomerName + " - " +
+                FameAndShamePropsLst[1].OrderCount.ToString("D") + Environment.NewLine +
+                "3. " + FameAndShamePropsLst[2].CustomerName + " - " +
+                FameAndShamePropsLst[2].OrderCount.ToString("D");
         }
 
         private void SparfuchsGröpatz()
@@ -160,6 +186,10 @@ namespace Pizza
             {
                 labelFameTip.Text = "Zu wenig Daten";
                 labelShameTip.Text = "Zu wenig Daten";
+                labelFameOrderSum.Text = "Zu wenig Daten";
+                labelShameOrderSum.Text = "Zu wenig Daten";
+                labelFameOrderCount.Text = "Zu wenig Daten";
+                labelShameOrderCount.Text = "Zu wenig Daten";
             }
    
         }
