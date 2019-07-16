@@ -81,6 +81,7 @@ namespace Pizza
         {
             InitializeComponent();
             this.Shown += new System.EventHandler(this.MainForm_Shown);
+            
         }
 
         void SerializeOrdersXml()
@@ -244,8 +245,9 @@ namespace Pizza
 
             if (order.OrderPropsLst.Any())
             {
-                // Disable MainForm layout logic while changing controls for better visuals.
-                this.SuspendLayout();
+                // Disable panel layout logic while changing controls for better visuals.
+                panelOrder.SuspendLayout();
+
                 oldOrderCrtlCnt = CleanOrderPanel();
 
                 // Add new control for each customer of the last order
@@ -319,13 +321,14 @@ namespace Pizza
                 buttonCloseOrder.Enabled = false;
             }
 
-            // Re-enable MainForm layout logic.
-            this.ResumeLayout();
+            // Re-enable panel layout logic.
+            panelOrder.ResumeLayout(false);
+            panelOrder.PerformLayout();
 
             // Resize and position MainForm
             this.Size = new System.Drawing.Size(this.Width, groupBoxOrderManagement.Height
                 + panelOrder.Height + panelOrderSums.Height + MainFormHeightOffset);
-            
+
             if (oldOrderCrtlCnt < i)
             {
                 this.CenterToScreen();
@@ -334,6 +337,12 @@ namespace Pizza
             CalculateStatisticsForNerds();
             CalculateOrderSums();
             SerializeOrdersXml();
+
+            // Send load screen to background
+            foreach (LoadScreen ls in this.Controls.OfType<LoadScreen>())
+            {
+                ls.SendToBack();
+            }
         }
 
         // Remove all controls from the panel an the OrderCrtlLst.
@@ -487,6 +496,23 @@ namespace Pizza
 
         private void MainForm_Shown(Object sender, EventArgs e)
         {
+            // Create load screen control that is automatically resizing to the main form size.
+            // While creating a new table use BringToFront() when operation successful use BringToBackground().
+            LoadScreen loadScreen = new LoadScreen();
+            this.Controls.Add(loadScreen);
+            loadScreen.Location = new System.Drawing.Point(0, 0);
+            loadScreen.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.None));
+            loadScreen.Dock = System.Windows.Forms.DockStyle.Fill;
+            loadScreen.Show();
+            loadScreen.BringToFront();
+
+            this.Refresh();
+            loadScreen.Refresh();
+            InitMainForm();
+        }
+
+        private void InitMainForm()
+        {
             // Set MaximumSize for MainForm to always fit screen
             this.MaximumSize = new System.Drawing.Size(Screen.PrimaryScreen.WorkingArea.Width,
                 Screen.PrimaryScreen.WorkingArea.Height);
@@ -497,26 +523,13 @@ namespace Pizza
             OrderControl orderControl = new OrderControl();
             int orderControlHeight = orderControl.Height;
             orderControl.Dispose();
-
-            int tmp = 0;
-
-            while (true)
-            {
-                tmp += orderControlHeight;
-
-                if (tmp >= Screen.PrimaryScreen.WorkingArea.Height - 250)
-                {
-                    panelOrder.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width,
-                        tmp - orderControlHeight);
-                    break;
-                }
-            }
+            double tmp = Math.Ceiling(Convert.ToDouble((Screen.PrimaryScreen.WorkingArea.Height - 250) / orderControlHeight));
+            panelOrder.MaximumSize = new System.Drawing.Size(this.MaximumSize.Width, (int)tmp * orderControlHeight);
 
             // Initialize data structures and populate the order table and MainForm.
             DeserializeOrdersXml();
             InitComboBoxOrders();
             NewOrderTable(LastOrder);
-
 
             if (this.comboBoxOrders.Items.Count < 2)
             {
@@ -549,6 +562,11 @@ namespace Pizza
                 {
                     if (order.OrderTimestamp.ToString().Equals(timeStamp))
                     {
+                        foreach (LoadScreen ls in this.Controls.OfType<LoadScreen>())
+                        {
+                            ls.BringToFront();
+                            ls.Refresh();
+                        }
                         NewOrderTable(order);
                         break;
                     }
@@ -707,12 +725,12 @@ namespace Pizza
             NewOrderTable(OrdersLst[oderIdx]);
         }
 
-        #endregion
-
         private void ButtonHallOfFame_Click(object sender, EventArgs e)
         {
             FameAndShameForm fameAndShameForm = new FameAndShameForm(OrdersLst);
             fameAndShameForm.ShowDialog();
         }
+
+        #endregion
     }
 }
