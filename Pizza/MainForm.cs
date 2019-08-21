@@ -453,6 +453,7 @@ namespace Pizza
             decimal totalTip = 0;
             decimal totalPriceWithDiscount = 0;
             decimal totalPricePayed = 0;
+            decimal totalPriceToPay = 0;
 
             if (orderIdx >= 0)
             {
@@ -464,10 +465,12 @@ namespace Pizza
                     totalPricePayed += orderProps.PricePayed;
                 }
 
-                labelTotalPrice.Text = totalPrice.ToString("N2") + " €";
+                totalPriceToPay = totalPriceWithDiscount + totalTip;
+
                 labelTotalTip.Text = totalTip.ToString("N2") + " €";
                 labelTotalPriceWithDiscount.Text = totalPriceWithDiscount.ToString("N2") + " €";
-                labelTotalPricePayed.Text = totalPricePayed.ToString("N2") + " €"; 
+                labelTotalPricePayed.Text = totalPricePayed.ToString("N2") + " €";
+                labelTotalPriceToPay.Text = totalPriceToPay.ToString("N2") + " €";
             }
         }
 
