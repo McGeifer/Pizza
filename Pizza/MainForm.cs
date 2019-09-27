@@ -405,6 +405,7 @@ namespace Pizza
                         if (orderProps.Tip > maxSingleTip)
                         {
                             maxSingleTip = orderProps.Tip;
+                            toolTipMaxTip.SetToolTip(labelMaxTip, orderProps.CustomerName);
                         }
 
                         if (!orderProps.Articles.Equals(String.Empty))
@@ -424,7 +425,6 @@ namespace Pizza
                                 totalunknown++;
                             }
                         }
-
                     }
                 }
 
